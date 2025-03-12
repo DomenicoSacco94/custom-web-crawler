@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface RegexpRepository extends JpaRepository<Regexp, Long> {
     boolean existsByPattern(String pattern);
-    List<Regexp> findAllByPatternIn(List<String> patterns);
+    List<Regexp> findByPattern(String pattern);
     List<RegexpProjection> findAllBy();
 }

@@ -1,6 +1,7 @@
 package com.crawler.validation;
 
 import com.crawler.domains.regexps.RegexpRepository;
+import com.crawler.domains.regexps.models.Regexp;
 import com.crawler.domains.scanner.exceptions.BlacklistedPatternDetectedException;
 import com.crawler.domains.scanner.validator.BlacklistedPatternValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class RegexpValidatorTest {
@@ -30,6 +32,10 @@ public class RegexpValidatorTest {
         MockitoAnnotations.openMocks(this);
         validator = new BlacklistedPatternValidator(regexpRepository);
         when(regexpRepository.findAllBy()).thenReturn(List.of(() -> "DE15\\s3006\\s0601\\s0505\\s7807\\s80"));
+        Regexp mockRegexp = new Regexp();
+        mockRegexp.setId(1L);
+        mockRegexp.setPattern("DE15\\s3006\\s0601\\s0505\\s7807\\s80");
+        when(regexpRepository.findByPattern(any())).thenReturn(List.of(mockRegexp));
     }
 
     @Test

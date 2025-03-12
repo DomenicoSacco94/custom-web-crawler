@@ -1,6 +1,7 @@
 package com.crawler.services;
 
 import com.crawler.domains.regexps.RegexpRepository;
+import com.crawler.domains.regexps.models.Regexp;
 import com.crawler.domains.scanner.DocumentDownloadService;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.exceptions.InvalidContentDetectedException;
@@ -54,6 +55,10 @@ public class DocumentScannerServiceTest {
     @Test
     public void testScanPdfDocumentWithBlacklistedRegexp() throws Exception {
         when(regexpRepository.findAllBy()).thenReturn(List.of(()-> "DE15\\s3006\\s0601\\s0505\\s7807\\s80"));
+        Regexp mockRegexp = new Regexp();
+        mockRegexp.setId(1L);
+        mockRegexp.setPattern("DE15\\s3006\\s0601\\s0505\\s7807\\s80");
+        when(regexpRepository.findByPattern(any())).thenReturn(List.of(mockRegexp));
 
         Path validFilePath = Paths.get("src/test/resources/testfiles/Testdata_Invoices.pdf");
         byte[] validFileContent = Files.readAllBytes(validFilePath);

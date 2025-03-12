@@ -1,13 +1,13 @@
 package com.crawler.services;
 
-import com.crawler.domains.blacklist.BlacklistedIbanRepository;
+import com.crawler.domains.regexps.RegexpRepository;
 import com.crawler.domains.scanner.DocumentDownloadService;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.exceptions.InvalidContentDetectedException;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.utils.FileUtils;
-import com.crawler.domains.scanner.validator.BlacklistedIbanValidator;
+import com.crawler.domains.scanner.validator.BlacklistedPatternValidator;
 import org.apache.tika.Tika;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ public class DocumentScannerServiceTest {
     private DocumentDownloadService documentDownloadService;
 
     @Mock
-    private BlacklistedIbanRepository blacklistedIbanRepository;
+    private RegexpRepository regexpRepository;
 
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -45,15 +45,15 @@ public class DocumentScannerServiceTest {
 
     @BeforeEach
     public void setUp() {
-        BlacklistedIbanValidator blacklistedIbanValidator = new BlacklistedIbanValidator(blacklistedIbanRepository);
+        BlacklistedPatternValidator blacklistedPatternValidator = new BlacklistedPatternValidator(regexpRepository);
         Tika tika = new Tika();
         FileUtils fileUtils = new FileUtils(tika);
-        documentScannerService = new DocumentScannerService(List.of(blacklistedIbanValidator), documentDownloadService, fileUtils, kafkaTemplate);
+        documentScannerService = new DocumentScannerService(List.of(blacklistedPatternValidator), documentDownloadService, fileUtils, kafkaTemplate);
     }
 
     @Test
-    public void testScanPdfDocumentWithBlacklistedIban() throws Exception {
-        when(blacklistedIbanRepository.findAllBy()).thenReturn(List.of(()-> "DE15 3006 0601 0505 7807 80"));
+    public void testScanPdfDocumentWithBlacklistedRegexp() throws Exception {
+        when(regexpRepository.findAllBy()).thenReturn(List.of(()-> "DE15\\s3006\\s0601\\s0505\\s7807\\s80"));
 
         Path validFilePath = Paths.get("src/test/resources/testfiles/Testdata_Invoices.pdf");
         byte[] validFileContent = Files.readAllBytes(validFilePath);
@@ -64,8 +64,8 @@ public class DocumentScannerServiceTest {
     }
 
     @Test
-    public void testScanPdfDocumentWithoutBlacklistedIban() throws Exception {
-        when(blacklistedIbanRepository.findAllBy()).thenReturn(List.of(()-> "DE15 3006 0601 0505 7807 80"));
+    public void testScanPdfDocumentWithoutBlacklistedRegexp() throws Exception {
+        when(regexpRepository.findAllBy()).thenReturn(List.of(()-> "DE15\\s3006\\s0601\\s0505\\s7807\\s80"));
 
         Path validFilePath = Paths.get("src/test/resources/testfiles/Testdata_no_ibans.pdf");
         byte[] validFileContent = Files.readAllBytes(validFilePath);

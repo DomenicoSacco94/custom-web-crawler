@@ -1,1 +1,1 @@
-DELETE FROM blacklisted_ibans where iban = 'DE15 3006 0601 0505 7807 80';
+DELETE FROM regexps where pattern = 'DE15\s3006\s0601\s0505\s7807\s80';

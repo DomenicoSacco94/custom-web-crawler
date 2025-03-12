@@ -1,4 +1,4 @@
-package com.crawler.domains.blacklist.models;
+package com.crawler.domains.regexps.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -12,15 +12,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "blacklisted_ibans")
-public class BlacklistedIban {
+@Table(name = "regexps")
+public class Regexp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 34)
-    private String iban;
+    @Column(nullable = false)
+    private String pattern;
+
+    @Column
+    private String description;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

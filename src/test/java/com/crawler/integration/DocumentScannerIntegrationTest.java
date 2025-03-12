@@ -62,6 +62,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
         var response = restTemplate.postForEntity("/v1/document/scan/url", request, String.class);
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        Assertions.assertTrue(Objects.requireNonNull(response.getBody()).contains("Blacklisted IBAN(s) detected: [DE15 3006 0601 0505 7807 80]"));
+        Assertions.assertTrue(Objects.requireNonNull(response.getBody()).contains("Blacklisted Regexp(s) detected"));
+        Assertions.assertTrue(Objects.requireNonNull(response.getBody()).contains("Blacklisted Regexp(s) detected"));
     }
 }

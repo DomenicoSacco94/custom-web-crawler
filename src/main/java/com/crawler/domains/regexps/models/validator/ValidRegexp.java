@@ -1,4 +1,4 @@
-package com.crawler.domains.blacklist.models.validator;
+package com.crawler.domains.regexps.models.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = IbanFormatValidator.class)
+@Constraint(validatedBy = RegexpValidator.class)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidIban {
-    String message() default "Invalid IBAN";
+public @interface ValidRegexp {
+    String message() default "Invalid Regexp pattern";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

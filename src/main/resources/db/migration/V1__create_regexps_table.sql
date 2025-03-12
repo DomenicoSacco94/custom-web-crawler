@@ -1,6 +1,7 @@
-CREATE TABLE blacklisted_ibans (
+CREATE TABLE regexps (
                                    id SERIAL PRIMARY KEY,
-                                   iban VARCHAR(34) UNIQUE NOT NULL,
+                                   pattern TEXT NOT NULL,
+                                   description TEXT,
                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

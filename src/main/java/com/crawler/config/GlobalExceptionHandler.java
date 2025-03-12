@@ -1,7 +1,7 @@
 package com.crawler.config;
 
-import com.crawler.domains.blacklist.exceptions.IbanAlreadyExistsException;
-import com.crawler.domains.blacklist.exceptions.IbanNotFoundException;
+import com.crawler.domains.regexps.exceptions.PatternAlreadyExistsException;
+import com.crawler.domains.regexps.exceptions.PatternNotFoundException;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.exceptions.InvalidContentDetectedException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
@@ -45,13 +45,13 @@ public class GlobalExceptionHandler {
         return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IbanNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleIbanNotFoundException(IbanNotFoundException ex) {
+    @ExceptionHandler(PatternNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleRegexpNotFoundException(PatternNotFoundException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IbanAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleIbanAlreadyExistsException(IbanAlreadyExistsException ex) {
+    @ExceptionHandler(PatternAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleRegexpAlreadyExistsException(PatternAlreadyExistsException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.CONFLICT);
     }
 

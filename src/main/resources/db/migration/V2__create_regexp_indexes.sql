@@ -1,0 +1,1 @@
+CREATE INDEX idx_regexps_pattern ON regexps (pattern);

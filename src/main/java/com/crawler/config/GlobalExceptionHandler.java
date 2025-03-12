@@ -3,7 +3,6 @@ package com.crawler.config;
 import com.crawler.domains.regexps.exceptions.PatternAlreadyExistsException;
 import com.crawler.domains.regexps.exceptions.PatternNotFoundException;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
-import com.crawler.domains.scanner.exceptions.InvalidContentDetectedException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentUrlException;
 import com.crawler.utils.models.ExceptionResponse;
@@ -28,11 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DocumentScanException.class)
     public ResponseEntity<ExceptionResponse> handleDocumentScanException(DocumentScanException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(InvalidContentDetectedException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidContentDetectedException(InvalidContentDetectedException ex) {
-        return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidDocumentFormatException.class)

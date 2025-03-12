@@ -20,7 +20,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Objects;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude= KafkaAutoConfiguration.class)
@@ -55,14 +54,13 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void testDocumentScanWithInvalidContent() {
+    void testDocumentScanWithPattern() {
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
         DocumentScanRequest request = new DocumentScanRequest(fileUrl);
 
         var response = restTemplate.postForEntity("/v1/document/scan/url", request, String.class);
 
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        Assertions.assertTrue(Objects.requireNonNull(response.getBody()).contains("Blacklisted Regexp(s) detected"));
-        Assertions.assertTrue(Objects.requireNonNull(response.getBody()).contains("Blacklisted Regexp(s) detected"));
+        //todo check body content
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

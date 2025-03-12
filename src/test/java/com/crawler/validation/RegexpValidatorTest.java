@@ -2,20 +2,16 @@ package com.crawler.validation;
 
 import com.crawler.domains.regexps.RegexpRepository;
 import com.crawler.domains.regexps.models.Regexp;
-import com.crawler.domains.scanner.exceptions.BlacklistedPatternDetectedException;
-import com.crawler.domains.scanner.validator.BlacklistedPatternValidator;
+import com.crawler.domains.scanner.processors.DocumentPatternProcessor;
+import com.crawler.domains.scanner.processors.RegexpOccurrence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
 
 import java.util.List;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -24,13 +20,12 @@ public class RegexpValidatorTest {
     @Mock
     private RegexpRepository regexpRepository;
 
-    private BlacklistedPatternValidator validator;
-
+    private DocumentPatternProcessor processor;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        validator = new BlacklistedPatternValidator(regexpRepository);
+        processor = new DocumentPatternProcessor(regexpRepository);
         when(regexpRepository.findAllBy()).thenReturn(List.of(() -> "DE15\\s3006\\s0601\\s0505\\s7807\\s80"));
         Regexp mockRegexp = new Regexp();
         mockRegexp.setId(1L);
@@ -41,22 +36,19 @@ public class RegexpValidatorTest {
     @Test
     public void testDocWithoutBlacklist() {
         String docText = "some text extracted from the document DE89 3704 0044 0532 0130 01";
-        Errors errors = new BeanPropertyBindingResult(docText, "docText");
 
-        validator.validate(docText, errors);
+        List<RegexpOccurrence> occurrences = processor.detectPatterns(docText);
 
-        assertFalse(errors.hasErrors());
+        assertEquals(0, occurrences.size());
     }
 
     @Test
     public void testDocWithBlacklistedRegexp() {
         String docText = "some text extracted from the document DE15 3006 0601 0505 7807 80";
-        Errors errors = new BeanPropertyBindingResult(docText, "docText");
 
-        validator.validate(docText, errors);
+        List<RegexpOccurrence> occurrences = processor.detectPatterns(docText);
 
-        assertTrue(errors.hasErrors());
-        assertTrue(errors.getAllErrors().stream()
-                .anyMatch(error -> Objects.equals(error.getCode(), BlacklistedPatternDetectedException.class.getSimpleName())));
+        assertEquals(1, occurrences.size());
+        assertEquals("DE15\\s3006\\s0601\\s0505\\s7807\\s80", occurrences.get(0).getRegexp().getPattern());
     }
 }

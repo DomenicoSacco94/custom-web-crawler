@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: local
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    url: ${SPRING_DATASOURCE_URL}
+    user: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: document-scanner-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+logging:
+  level:
+    root: INFO
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: integration-test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: test
+    password: test
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/testdb
+    user: test
+    password: test
+    locations: classpath:db/migration
+  kafka:
+    jaas:
+      enabled: false
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: none
+    listener:
+      ack-mode: manual
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

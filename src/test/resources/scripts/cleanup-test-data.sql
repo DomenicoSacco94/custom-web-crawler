@@ -1,0 +1,1 @@
+DELETE FROM blacklisted_ibans where iban = 'DE15 3006 0601 0505 7807 80';

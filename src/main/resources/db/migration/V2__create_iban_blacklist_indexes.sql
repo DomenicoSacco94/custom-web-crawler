@@ -1,0 +1,1 @@
+CREATE INDEX idx_blacklisted_ibans_iban ON blacklisted_ibans (iban);

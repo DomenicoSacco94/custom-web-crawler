@@ -1,0 +1,1 @@
+INSERT INTO blacklisted_ibans (iban) VALUES ('DE15 3006 0601 0505 7807 80');

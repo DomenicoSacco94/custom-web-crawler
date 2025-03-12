@@ -1,0 +1,121 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.2'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    configureEach {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springBootVersion = '3.4.2'
+    lombokVersion = '1.18.28'
+    mapstructVersion = '1.5.5.Final'
+    liquibaseVersion = '4.30.0'
+    springdocVersion = '2.1.0'
+    testcontainersVersion = '1.20.4'
+    slf4jVersion = '2.0.16'
+    apacheCommonCompress = '1.26.0'
+    mapstructVersion = '1.6.3'
+    pdfboxVersion = '3.0.4'
+    openApiVersion = '1.6.9'
+    flywayVersion = '9.16.0'
+    okhttpVersion = '4.12.0'
+    kafkaVersion = '3.3.3'
+}
+
+dependencies {
+    // Base dependencies for Spring Boot, Data, Web and Testing
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    // PostgreSQL
+    runtimeOnly "org.postgresql:postgresql"
+
+    // Swagger
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
+
+    // Flyway
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Integration tests using temporary containers
+    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation "org.testcontainers:postgresql:${testcontainersVersion}"
+
+    // Junit for testing
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    // Update the commons-compress dependency to a secure version
+    implementation "org.apache.commons:commons-compress:${apacheCommonCompress}"
+
+    // Pdfbox to handle the PDF files
+    implementation "org.apache.pdfbox:pdfbox:${pdfboxVersion}"
+
+    // mapstruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // MIME validation library
+    implementation 'org.apache.tika:tika-core:2.4.1'
+
+    // mock server for the integration test
+    testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
+
+    // Kafka
+    implementation "org.springframework.kafka:spring-kafka:${kafkaVersion}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    // This section excludes Lombok generated methods from the testing coverage reports
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            '**/*$*.class'
+                    ])
+                })
+        )
+    }
+}

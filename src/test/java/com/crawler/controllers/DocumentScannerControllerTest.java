@@ -5,7 +5,7 @@ import com.crawler.domains.scanner.DocumentScannerController;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
-import com.crawler.domains.scanner.processors.RegexpOccurrence;
+import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,12 +36,12 @@ class DocumentScannerControllerTest {
 
     @Test
     void testScanDocument() {
-        List<RegexpOccurrence> mockOccurrences = List.of(new RegexpOccurrence(new Regexp(), "surroundingText"));
+        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(new Regexp(), "surroundingText", null));
         when(scannerService.scanDocument(any(DocumentScanRequest.class))).thenReturn(mockOccurrences);
 
         DocumentScanRequest request = new DocumentScanRequest("http://example.com/document.pdf");
 
-        ResponseEntity<List<RegexpOccurrence>> response = documentScannerController.scanDocument(request);
+        ResponseEntity<List<OccurrenceDTO>> response = documentScannerController.scanDocument(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockOccurrences, response.getBody());
@@ -51,10 +51,10 @@ class DocumentScannerControllerTest {
     @Test
     void testScanUploadedDocument() {
         MultipartFile file = mock(MultipartFile.class);
-        List<RegexpOccurrence> mockOccurrences = List.of(new RegexpOccurrence(new Regexp(), "surroundingText"));
+        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(new Regexp(), "surroundingText", null));
         when(scannerService.scanUploadedDocument(any(MultipartFile.class))).thenReturn(mockOccurrences);
 
-        ResponseEntity<List<RegexpOccurrence>> response = documentScannerController.scanUploadedDocument(file);
+        ResponseEntity<List<OccurrenceDTO>> response = documentScannerController.scanUploadedDocument(file);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockOccurrences, response.getBody());

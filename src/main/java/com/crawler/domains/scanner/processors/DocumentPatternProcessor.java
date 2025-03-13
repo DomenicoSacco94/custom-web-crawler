@@ -3,6 +3,7 @@ package com.crawler.domains.scanner.processors;
 import com.crawler.domains.regexps.RegexpRepository;
 import com.crawler.domains.regexps.models.Regexp;
 import com.crawler.domains.regexps.models.RegexpProjection;
+import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,9 @@ public class DocumentPatternProcessor {
 
     private final RegexpRepository regexpRepository;
 
-    private final static int SURROUNDING_CHARS = 500;
+    private final static int SURROUNDING_CHARS = 2000;
 
-    public List<RegexpOccurrence> detectPatterns(String text) {
+    public List<OccurrenceDTO> detectPatterns(String text) {
         List<RegexpProjection> blacklistedPatterns = regexpRepository.findAllBy();
 
         return blacklistedPatterns.stream()
@@ -33,7 +34,7 @@ public class DocumentPatternProcessor {
                             int start = Math.max(0, matcher.start() - SURROUNDING_CHARS);
                             int end = Math.min(text.length(), matcher.end() + SURROUNDING_CHARS);
                             String surroundingText = text.substring(start, end);
-                            return new RegexpOccurrence(regexp, surroundingText);
+                            return new OccurrenceDTO(regexp, surroundingText, null);
                         }
                     }
                     return null;

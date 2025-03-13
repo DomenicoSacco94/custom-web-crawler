@@ -2,7 +2,7 @@ package com.crawler.domains.scanner;
 
 import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
-import com.crawler.domains.scanner.processors.RegexpOccurrence;
+import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +23,16 @@ public class DocumentScannerController {
 
     @Operation(summary = "Scan a document from a URL")
     @PostMapping("/url")
-    public ResponseEntity<List<RegexpOccurrence>> scanDocument(@RequestBody DocumentScanRequest request) {
-        List<RegexpOccurrence> occurrences = scannerService.scanDocument(request);
+    public ResponseEntity<List<OccurrenceDTO>> scanDocument(@RequestBody DocumentScanRequest request) {
+        List<OccurrenceDTO> occurrences = scannerService.scanDocument(request);
         return ResponseEntity.ok(occurrences);
     }
 
     @Operation(summary = "Scan an uploaded document")
     @PostMapping("/upload")
-    public ResponseEntity<List<RegexpOccurrence>> scanUploadedDocument(
+    public ResponseEntity<List<OccurrenceDTO>> scanUploadedDocument(
             @Parameter(description = "File to be uploaded") @RequestParam("file") MultipartFile file) {
-        List<RegexpOccurrence> occurrences = scannerService.scanUploadedDocument(file);
+        List<OccurrenceDTO> occurrences = scannerService.scanUploadedDocument(file);
         return ResponseEntity.ok(occurrences);
     }
 

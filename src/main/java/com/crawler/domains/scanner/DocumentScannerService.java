@@ -4,7 +4,7 @@ import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
 import com.crawler.domains.scanner.processors.DocumentPatternProcessor;
-import com.crawler.domains.scanner.processors.RegexpOccurrence;
+import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import com.crawler.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,19 +36,19 @@ public class DocumentScannerService {
     private final int FETCH_RATE_MILLISECONDS = 200;
     private final int THREAD_POOL_SIZE = 5;
 
-    public List<RegexpOccurrence> scanDocument(DocumentScanRequest request) {
+    public List<OccurrenceDTO> scanDocument(DocumentScanRequest request) {
         try {
             byte[] pdfBytes = documentDownloadService.downloadFile(request.getUrl());
-            return validatePdf(pdfBytes);
+            return scanPdf(pdfBytes);
         } catch (IOException e) {
             throw new DocumentScanException("Failed to process the PDF file from: " + request.getUrl(), e);
         }
     }
 
-    public List<RegexpOccurrence> scanUploadedDocument(MultipartFile file) {
+    public List<OccurrenceDTO> scanUploadedDocument(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             byte[] pdfBytes = fileUtils.readInputStreamInChunks(inputStream);
-            return validatePdf(pdfBytes);
+            return scanPdf(pdfBytes);
         } catch (IOException e) {
             throw new DocumentScanException("Failed to process the uploaded PDF file", e);
         }
@@ -66,7 +66,7 @@ public class DocumentScannerService {
         scheduler.shutdown();
     }
 
-    private List<RegexpOccurrence> validatePdf(byte[] pdfBytes) throws IOException {
+    private List<OccurrenceDTO> scanPdf(byte[] pdfBytes) throws IOException {
         fileUtils.validateFileType(pdfBytes, APPLICATION_PDF);
         try (PDDocument document = Loader.loadPDF(pdfBytes)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();

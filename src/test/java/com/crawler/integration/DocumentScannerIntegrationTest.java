@@ -42,7 +42,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     @Qualifier("testKafkaTemplate")
-    private KafkaTemplate<String, OccurrenceDTO> kafkaTemplate;
+    private KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
 
     @BeforeEach
     void setUp() throws Exception {

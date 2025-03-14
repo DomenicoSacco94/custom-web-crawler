@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import static com.crawler.domains.occurrences.OccurrenceService.OCCURRENCE_INFERENCE_TOPIC;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -15,7 +17,7 @@ public class InferenceListener {
 
     private final InferenceService inferenceService;
 
-    @KafkaListener(topics = "occurrence-inference-topic", groupId = "inference-group")
+    @KafkaListener(topics = OCCURRENCE_INFERENCE_TOPIC, groupId = "inference-group")
     public void listen(OccurrenceDTO occurrenceDTO) {
         log.info("Received inference message: {}", occurrenceDTO);
 

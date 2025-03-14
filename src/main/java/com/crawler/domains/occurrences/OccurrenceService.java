@@ -16,8 +16,8 @@ import java.util.List;
 public class OccurrenceService {
     private final OccurrenceRepository repository;
     private final OccurrenceMapper occurrenceMapper = OccurrenceMapper.INSTANCE;
-    private final KafkaTemplate<String, OccurrenceDTO> kafkaTemplate;
-    private static final String OCCURRENCE_INFERENCE_TOPIC = "occurrence-inference-topic";
+    private final KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
+    public static final String OCCURRENCE_INFERENCE_TOPIC = "occurrence-inference-topic";
 
     public List<Occurrence> findAll() {
         return repository.findAll();
@@ -30,6 +30,6 @@ public class OccurrenceService {
 
     public void onOccurrence(OccurrenceDTO occurrenceDTO) {
         log.info("sending {}", occurrenceDTO);
-        kafkaTemplate.send(OCCURRENCE_INFERENCE_TOPIC, occurrenceDTO);
+        occurrenceKafkaTemplate.send(OCCURRENCE_INFERENCE_TOPIC, occurrenceDTO);
     }
 }

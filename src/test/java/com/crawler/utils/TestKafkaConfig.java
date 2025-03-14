@@ -13,7 +13,7 @@ public class TestKafkaConfig {
 
     @Bean(name = "testKafkaTemplate")
     @Primary
-    public KafkaTemplate<String, OccurrenceDTO> kafkaTemplate() {
+    public KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate() {
         return mock(KafkaTemplate.class);
     }
 }

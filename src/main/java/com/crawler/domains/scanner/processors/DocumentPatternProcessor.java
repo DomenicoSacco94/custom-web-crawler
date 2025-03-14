@@ -25,21 +25,23 @@ public class DocumentPatternProcessor {
         List<RegexpProjection> blacklistedPatterns = regexpRepository.findAllBy();
 
         return blacklistedPatterns.stream()
-                .map(regexpProjection -> {
-                    Pattern pattern = Pattern.compile(regexpProjection.getPattern(), Pattern.DOTALL | Pattern.MULTILINE);
-                    Matcher matcher = pattern.matcher(text);
-                    if (matcher.find()) {
-                        Regexp regexp = regexpRepository.findByPattern(regexpProjection.getPattern()).stream().findFirst().orElse(null);
-                        if (regexp != null) {
-                            int start = Math.max(0, matcher.start() - SURROUNDING_CHARS);
-                            int end = Math.min(text.length(), matcher.end() + SURROUNDING_CHARS);
-                            String surroundingText = text.substring(start, end);
-                            return new OccurrenceDTO(regexp, surroundingText, null);
-                        }
-                    }
-                    return null;
-                })
+                .map(regexpProjection -> findPatternOccurrences(regexpProjection, text))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    private OccurrenceDTO findPatternOccurrences(RegexpProjection regexpProjection, String text) {
+        Pattern pattern = Pattern.compile(regexpProjection.getPattern(), Pattern.DOTALL | Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            Regexp regexp = regexpRepository.findByPattern(regexpProjection.getPattern()).stream().findFirst().orElse(null);
+            if (regexp != null) {
+                int start = Math.max(0, matcher.start() - SURROUNDING_CHARS);
+                int end = Math.min(text.length(), matcher.end() + SURROUNDING_CHARS);
+                String surroundingText = text.substring(start, end);
+                return new OccurrenceDTO(regexp, surroundingText, null);
+            }
+        }
+        return null;
     }
 }

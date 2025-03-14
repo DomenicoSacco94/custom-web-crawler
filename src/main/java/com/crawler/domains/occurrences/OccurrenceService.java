@@ -4,6 +4,7 @@ import com.crawler.domains.occurrences.mappers.OccurrenceMapper;
 import com.crawler.domains.occurrences.models.Occurrence;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OccurrenceService {
     private final OccurrenceRepository repository;
     private final OccurrenceMapper occurrenceMapper = OccurrenceMapper.INSTANCE;
@@ -27,6 +29,7 @@ public class OccurrenceService {
     }
 
     public void onOccurrence(OccurrenceDTO occurrenceDTO) {
+        log.info("sending {}", occurrenceDTO);
         kafkaTemplate.send(OCCURRENCE_INFERENCE_TOPIC, occurrenceDTO);
     }
 }

@@ -23,6 +23,7 @@ public class DocumentScanListener {
 
     @KafkaListener(topics = KAFKA_DOCUMENT_SCAN_TOPIC, groupId = "document-scanner-group")
     public void listen(String url) {
+        log.info("listening to url {}", url);
         DocumentScanRequest request = new DocumentScanRequest(url);
         List<OccurrenceDTO> occurrences = scannerService.scanDocument(request);
         occurrences.forEach(occurrence -> {

@@ -1,6 +1,6 @@
 package com.crawler.domains.occurrences.models;
 
-import com.crawler.domains.regexps.models.Regexp;
+import com.crawler.domains.regexp.models.Regexp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

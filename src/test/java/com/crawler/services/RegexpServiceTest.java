@@ -1,12 +1,12 @@
 package com.crawler.services;
 
-import com.crawler.domains.regexps.RegexpRepository;
-import com.crawler.domains.regexps.RegexpService;
-import com.crawler.domains.regexps.exceptions.PatternAlreadyExistsException;
-import com.crawler.domains.regexps.exceptions.PatternNotFoundException;
-import com.crawler.domains.regexps.models.Regexp;
-import com.crawler.domains.regexps.models.RegexpDTO;
-import com.crawler.domains.regexps.models.mappers.RegexpMapper;
+import com.crawler.domains.regexp.RegexpRepository;
+import com.crawler.domains.regexp.RegexpService;
+import com.crawler.domains.regexp.exceptions.PatternAlreadyExistsException;
+import com.crawler.domains.regexp.exceptions.PatternNotFoundException;
+import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.regexp.models.RegexpDTO;
+import com.crawler.domains.regexp.models.mappers.RegexpMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

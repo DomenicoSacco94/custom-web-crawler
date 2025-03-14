@@ -1,7 +1,7 @@
 package com.crawler.config;
 
-import com.crawler.domains.regexps.exceptions.PatternAlreadyExistsException;
-import com.crawler.domains.regexps.exceptions.PatternNotFoundException;
+import com.crawler.domains.regexp.exceptions.PatternAlreadyExistsException;
+import com.crawler.domains.regexp.exceptions.PatternNotFoundException;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentUrlException;

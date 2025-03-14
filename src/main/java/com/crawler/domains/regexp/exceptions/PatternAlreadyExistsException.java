@@ -1,4 +1,4 @@
-package com.crawler.domains.regexps.exceptions;
+package com.crawler.domains.regexp.exceptions;
 
 public class PatternAlreadyExistsException extends RuntimeException {
     public PatternAlreadyExistsException(String message) {

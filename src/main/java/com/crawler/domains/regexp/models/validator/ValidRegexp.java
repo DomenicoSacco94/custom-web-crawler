@@ -1,4 +1,4 @@
-package com.crawler.domains.regexps.models.validator;
+package com.crawler.domains.regexp.models.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

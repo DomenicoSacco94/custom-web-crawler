@@ -1,4 +1,4 @@
-package com.crawler.domains.regexps.exceptions;
+package com.crawler.domains.regexp.exceptions;
 
 public class PatternNotFoundException extends RuntimeException {
 

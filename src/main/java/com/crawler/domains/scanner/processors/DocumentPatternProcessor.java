@@ -1,8 +1,8 @@
 package com.crawler.domains.scanner.processors;
 
-import com.crawler.domains.regexps.RegexpRepository;
-import com.crawler.domains.regexps.models.Regexp;
-import com.crawler.domains.regexps.models.RegexpProjection;
+import com.crawler.domains.regexp.RegexpRepository;
+import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.regexp.models.RegexpProjection;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

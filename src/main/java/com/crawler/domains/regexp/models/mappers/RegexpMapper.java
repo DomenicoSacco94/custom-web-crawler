@@ -1,7 +1,7 @@
-package com.crawler.domains.regexps.models.mappers;
+package com.crawler.domains.regexp.models.mappers;
 
-import com.crawler.domains.regexps.models.Regexp;
-import com.crawler.domains.regexps.models.RegexpDTO;
+import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.regexp.models.RegexpDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

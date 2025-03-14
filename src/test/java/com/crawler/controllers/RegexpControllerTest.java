@@ -1,8 +1,8 @@
 package com.crawler.controllers;
 
-import com.crawler.domains.regexps.RegexpController;
-import com.crawler.domains.regexps.RegexpService;
-import com.crawler.domains.regexps.models.RegexpDTO;
+import com.crawler.domains.regexp.RegexpController;
+import com.crawler.domains.regexp.RegexpService;
+import com.crawler.domains.regexp.models.RegexpDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

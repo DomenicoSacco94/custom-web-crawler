@@ -1,7 +1,7 @@
-package com.crawler.domains.regexps.models;
+package com.crawler.domains.regexp.models;
 
 
-import com.crawler.domains.regexps.models.validator.ValidRegexp;
+import com.crawler.domains.regexp.models.validator.ValidRegexp;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDateTime;

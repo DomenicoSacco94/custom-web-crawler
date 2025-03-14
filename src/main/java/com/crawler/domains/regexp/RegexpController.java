@@ -1,6 +1,6 @@
-package com.crawler.domains.regexps;
+package com.crawler.domains.regexp;
 
-import com.crawler.domains.regexps.models.RegexpDTO;
+import com.crawler.domains.regexp.models.RegexpDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,10 @@
-package com.crawler.domains.regexps;
+package com.crawler.domains.regexp;
 
-import com.crawler.domains.regexps.exceptions.PatternAlreadyExistsException;
-import com.crawler.domains.regexps.exceptions.PatternNotFoundException;
-import com.crawler.domains.regexps.models.Regexp;
-import com.crawler.domains.regexps.models.RegexpDTO;
-import com.crawler.domains.regexps.models.mappers.RegexpMapper;
+import com.crawler.domains.regexp.exceptions.PatternAlreadyExistsException;
+import com.crawler.domains.regexp.exceptions.PatternNotFoundException;
+import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.regexp.models.RegexpDTO;
+import com.crawler.domains.regexp.models.mappers.RegexpMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

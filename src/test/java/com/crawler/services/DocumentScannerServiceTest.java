@@ -1,7 +1,7 @@
 package com.crawler.services;
 
-import com.crawler.domains.regexps.RegexpRepository;
-import com.crawler.domains.regexps.models.Regexp;
+import com.crawler.domains.regexp.RegexpRepository;
+import com.crawler.domains.regexp.models.Regexp;
 import com.crawler.domains.scanner.DocumentDownloadService;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;

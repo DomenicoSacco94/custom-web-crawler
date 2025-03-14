@@ -36,7 +36,7 @@ class DocumentScannerControllerTest {
 
     @Test
     void testScanDocument() {
-        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(new Regexp(), "surroundingText", null));
+        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(null, new Regexp(), "surroundingText", null));
         when(scannerService.scanDocument(any(DocumentScanRequest.class))).thenReturn(mockOccurrences);
 
         DocumentScanRequest request = new DocumentScanRequest("http://example.com/document.pdf");
@@ -51,7 +51,7 @@ class DocumentScannerControllerTest {
     @Test
     void testScanUploadedDocument() {
         MultipartFile file = mock(MultipartFile.class);
-        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(new Regexp(), "surroundingText", null));
+        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(null, new Regexp(), "surroundingText", null));
         when(scannerService.scanUploadedDocument(any(MultipartFile.class))).thenReturn(mockOccurrences);
 
         ResponseEntity<List<OccurrenceDTO>> response = documentScannerController.scanUploadedDocument(file);

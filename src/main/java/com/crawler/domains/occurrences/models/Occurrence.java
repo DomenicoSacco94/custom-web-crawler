@@ -15,15 +15,15 @@ public class Occurrence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String pattern;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String surroundingText;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String url;
 }

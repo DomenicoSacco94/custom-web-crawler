@@ -1,7 +1,9 @@
 package com.crawler.integration;
 
+import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import com.crawler.integration.config.AbstractIntegrationTest;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
+import com.crawler.utils.TestKafkaConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
@@ -10,19 +12,23 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration(exclude= KafkaAutoConfiguration.class)
+@ContextConfiguration(classes = {TestKafkaConfig.class})
+@EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 @Sql(scripts = "/scripts/insert-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/scripts/cleanup-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
@@ -33,6 +39,10 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
     private MockWebServer mockWebServer;
 
     private final int MOCKED_DOCUMENT_SERVER_PORT = 8084;
+
+    @Autowired
+    @Qualifier("testKafkaTemplate")
+    private KafkaTemplate<String, OccurrenceDTO> kafkaTemplate;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -58,9 +68,13 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
         DocumentScanRequest request = new DocumentScanRequest(fileUrl);
 
-        var response = restTemplate.postForEntity("/v1/document/scan/url", request, String.class);
+        var response = restTemplate.postForEntity("/v1/document/scan/url", request, OccurrenceDTO[].class);
 
-        //todo check body content
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        OccurrenceDTO[] occurrences = response.getBody();
+        Assertions.assertNotNull(occurrences);
+        Assertions.assertEquals(1, occurrences.length);
+        Assertions.assertNotNull(occurrences[0].getRegexp());
+        Assertions.assertNotNull(occurrences[0].getSurroundingText());
     }
 }

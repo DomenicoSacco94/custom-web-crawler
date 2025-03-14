@@ -1,5 +1,6 @@
 package com.crawler.domains.scanner;
 
+import com.crawler.domains.occurrences.OccurrenceService;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
@@ -29,17 +30,24 @@ public class DocumentScannerService {
 
     private final DocumentPatternProcessor patternValidator;
     private final DocumentDownloadService documentDownloadService;
+    private final OccurrenceService occurrenceService;
     private final FileUtils fileUtils;
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final String APPLICATION_PDF = "application/pdf";
-    private final String KAFKA_TOPIC = "document-scan-topic";
-    private final int FETCH_RATE_MILLISECONDS = 200;
-    private final int THREAD_POOL_SIZE = 5;
+    private static final String APPLICATION_PDF = "application/pdf";
+    public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
+    private static final  int FETCH_RATE_MILLISECONDS = 200;
+    private static final  int THREAD_POOL_SIZE = 15;
 
     public List<OccurrenceDTO> scanDocument(DocumentScanRequest request) {
         try {
-            byte[] pdfBytes = documentDownloadService.downloadFile(request.getUrl());
-            return scanPdf(pdfBytes);
+            String documentUrl = request.getUrl();
+            byte[] pdfBytes = documentDownloadService.downloadFile(documentUrl);
+            List<OccurrenceDTO> occurrences = scanPdf(pdfBytes);
+            occurrences.forEach(occurrence -> {
+                occurrence.setUrl(documentUrl);
+                occurrenceService.save(occurrence);
+            });
+            return occurrences;
         } catch (IOException e) {
             throw new DocumentScanException("Failed to process the PDF file from: " + request.getUrl(), e);
         }
@@ -60,7 +68,7 @@ public class DocumentScannerService {
         List<String> urls = request.getUrls();
         for (int i = 0; i < urls.size(); i++) {
             final String url = urls.get(i);
-            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_TOPIC, url), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
+            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, url), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
 
         scheduler.shutdown();

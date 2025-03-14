@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class OccurrenceDTO {
+    private Long id;
     private Regexp regexp;
     private String surroundingText;
     private String url;

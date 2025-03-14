@@ -17,7 +17,7 @@ public class BlacklistedPatternDetectedException extends RuntimeException {
 
     private static String formatDetectedRegexps(List<OccurrenceDTO> detectedRegexps) {
         return detectedRegexps.stream()
-                .map(entity -> String.format("Pattern: %s, Description: %s, Text: %s", entity.getRegexp().getPattern(), entity.getRegexp().getDescription(), entity.getSurroundingText()))
+                .map(entity -> String.format("Pattern: %s, Description: %s, Text: %s", entity.getPattern(), entity.getDescription(), entity.getSurroundingText()))
                 .collect(Collectors.joining("; "));
     }
 }

@@ -11,11 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface OccurrenceMapper {
     OccurrenceMapper INSTANCE = Mappers.getMapper(OccurrenceMapper.class);
 
-    @Mapping(source = "regexp.pattern", target = "pattern")
-    @Mapping(source = "regexp.description", target = "description")
     Occurrence toEntity(OccurrenceDTO occurrenceDTO);
 
-    @Mapping(source = "pattern", target = "regexp.pattern")
-    @Mapping(source = "description", target = "regexp.description")
     OccurrenceDTO toDto(Occurrence occurrence);
 }

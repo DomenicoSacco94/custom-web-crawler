@@ -80,7 +80,7 @@ public void testScanPdfDocumentWithBlacklistedRegexp() throws Exception {
     Assertions.assertFalse(occurrences.isEmpty());
 
     OccurrenceDTO occurrence = occurrences.get(0);
-    Assertions.assertNotNull(occurrence.getRegexp());
+    Assertions.assertNotNull(occurrence.getPattern());
     Assertions.assertNotNull(occurrence.getSurroundingText());
 }
 

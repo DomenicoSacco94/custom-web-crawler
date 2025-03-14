@@ -74,7 +74,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
         OccurrenceDTO[] occurrences = response.getBody();
         Assertions.assertNotNull(occurrences);
         Assertions.assertEquals(1, occurrences.length);
-        Assertions.assertNotNull(occurrences[0].getRegexp());
+        Assertions.assertNotNull(occurrences[0].getPattern());
         Assertions.assertNotNull(occurrences[0].getSurroundingText());
     }
 }

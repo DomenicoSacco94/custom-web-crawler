@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OccurrenceDTO {
     private Long id;
-    private Regexp regexp;
+    private String pattern;
+    private String description;
     private String surroundingText;
     private String url;
 }

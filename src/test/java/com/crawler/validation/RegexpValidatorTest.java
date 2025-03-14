@@ -49,6 +49,6 @@ public class RegexpValidatorTest {
         List<OccurrenceDTO> occurrences = processor.detectPatterns(docText);
 
         assertEquals(1, occurrences.size());
-        assertEquals("DE15\\s3006\\s0601\\s0505\\s7807\\s80", occurrences.get(0).getRegexp().getPattern());
+        assertEquals("DE15\\s3006\\s0601\\s0505\\s7807\\s80", occurrences.get(0).getPattern());
     }
 }

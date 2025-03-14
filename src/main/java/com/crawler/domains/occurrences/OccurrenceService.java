@@ -19,13 +19,9 @@ public class OccurrenceService {
     private final KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
     public static final String OCCURRENCE_INFERENCE_TOPIC = "occurrence-inference-topic";
 
-    public List<Occurrence> findAll() {
-        return repository.findAll();
-    }
-
-    public void save(OccurrenceDTO occurrenceDTO) {
-        Occurrence occurrence = occurrenceMapper.toEntity(occurrenceDTO);
-        repository.save(occurrence);
+    public List<Occurrence> saveAll(List<OccurrenceDTO> occurrencesDTO) {
+        List<Occurrence> occurrences = occurrencesDTO.stream().map(occurrenceMapper::toEntity).toList();
+        return repository.saveAll(occurrences);
     }
 
     public void onOccurrence(OccurrenceDTO occurrenceDTO) {

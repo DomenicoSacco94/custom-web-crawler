@@ -1,6 +1,7 @@
 package com.crawler.domains.scanner;
 
 import com.crawler.domains.occurrences.OccurrenceService;
+import com.crawler.domains.occurrences.mappers.OccurrenceMapper;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DocumentScannerService {
 
+    private final OccurrenceMapper occurrenceMapper = OccurrenceMapper.INSTANCE;
     private final DocumentPatternProcessor patternValidator;
     private final DocumentDownloadService documentDownloadService;
     private final OccurrenceService occurrenceService;
@@ -45,9 +47,8 @@ public class DocumentScannerService {
             List<OccurrenceDTO> occurrences = scanPdf(pdfBytes);
             occurrences.forEach(occurrence -> {
                 occurrence.setUrl(documentUrl);
-                occurrenceService.save(occurrence);
             });
-            return occurrences;
+            return occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
         } catch (IOException e) {
             throw new DocumentScanException("Failed to process the PDF file from: " + request.getUrl(), e);
         }

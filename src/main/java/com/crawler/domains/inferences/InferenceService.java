@@ -48,7 +48,7 @@ public class InferenceService {
             Please make the answer no longer than %s characters.
             Do not repeat yourself saying it matches the pattern, that is already intended.
             I would like to understand more WHY it is mentioned there and WHAT IT TALKS ABOUT in that particular frame.
-            Your answer should only contain the nugget of information the text provides, like one or multiple facts.
+            Your answer should ONLY contain the nugget of information extracted from the test, like one or multiple facts.
             """.formatted(occurrenceDTO.getSurroundingText(), CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
 
         String response = ollamaChatModel.call(prompt);

@@ -96,7 +96,7 @@ dependencies {
     implementation "org.springframework.kafka:spring-kafka:${kafkaVersion}"
 
     // Ollama integration
-    //implementation "org.springframework.ai:spring-ai-ollama-spring-boot-starter:${springOllamaVersion}"
+    implementation "org.springframework.ai:spring-ai-ollama-spring-boot-starter:${springOllamaVersion}"
 }
 
 tasks.named('test') {

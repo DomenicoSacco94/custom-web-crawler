@@ -26,7 +26,8 @@ public class InferenceService {
     private final RestTemplate restTemplate = new RestTemplate();
     public final static int SYNTHESIS_FIRST_FACTOR = 2;
 
-    private String ollamaApiUrl = "http://ollama:8086";
+    @Value("${ollama.api.url}")
+    private String ollamaApiUrl;
 
     @Transactional
     public void saveInference(InferenceDTO inferenceDTO) {

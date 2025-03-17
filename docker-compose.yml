@@ -32,9 +32,15 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /var/lib/kafka/data
-      CLUSTER_ID: local-dev-cluster-id
     volumes:
       - /var/lib/kafka/data
+    networks:
+      - app-network
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "8086:8086"
     networks:
       - app-network
 
@@ -51,6 +57,7 @@ services:
     depends_on:
       - postgres-db
       - kafka
+      - ollama
     networks:
       - app-network
     env_file:

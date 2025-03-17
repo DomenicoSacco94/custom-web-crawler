@@ -19,7 +19,7 @@ public class DocumentPatternProcessor {
 
     private final RegexpRepository regexpRepository;
 
-    private final static int SURROUNDING_CHARS = 2000;
+    public final static int CHAR_WINDOW_LENGTH = 2000;
 
     public List<OccurrenceDTO> detectPatterns(String text) {
         List<RegexpProjection> blacklistedPatterns = regexpRepository.findAllBy();
@@ -36,8 +36,8 @@ public class DocumentPatternProcessor {
         if (matcher.find()) {
             Regexp regexp = regexpRepository.findByPattern(regexpProjection.getPattern()).stream().findFirst().orElse(null);
             if (regexp != null) {
-                int start = Math.max(0, matcher.start() - SURROUNDING_CHARS);
-                int end = Math.min(text.length(), matcher.end() + SURROUNDING_CHARS);
+                int start = Math.max(0, matcher.start() - CHAR_WINDOW_LENGTH /2);
+                int end = Math.min(text.length(), matcher.end() + CHAR_WINDOW_LENGTH /2);
                 String surroundingText = text.substring(start, end);
                 return new OccurrenceDTO(null, regexp.getPattern(), regexp.getDescription(), surroundingText, null);
             }

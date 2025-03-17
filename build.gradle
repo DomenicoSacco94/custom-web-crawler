@@ -42,6 +42,7 @@ ext {
     flywayVersion = '9.16.0'
     okhttpVersion = '4.12.0'
     kafkaVersion = '3.3.3'
+    springOllamaVersion = '1.0.0-M6'
 }
 
 dependencies {
@@ -93,6 +94,9 @@ dependencies {
 
     // Kafka
     implementation "org.springframework.kafka:spring-kafka:${kafkaVersion}"
+
+    // Ollama integration
+    //implementation "org.springframework.ai:spring-ai-ollama-spring-boot-starter:${springOllamaVersion}"
 }
 
 tasks.named('test') {

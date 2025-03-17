@@ -25,6 +25,9 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  ai:
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL}
 
 logging:
   level:

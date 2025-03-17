@@ -43,7 +43,7 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     ports:
-      - "8081:8081"
+      - "11434:11434"
     networks:
       - app-network
 
@@ -54,8 +54,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
-      OLLAMA_API_URL: ${OLLAMA_API_URL}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      SPRING_AI_OLLAMA_BASE_URL: ${SPRING_AI_OLLAMA_BASE_URL}
     ports:
       - "8080:8080"
     depends_on:

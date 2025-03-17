@@ -5,31 +5,22 @@ import com.crawler.domains.inferences.models.InferenceDTO;
 import com.crawler.domains.occurrences.OccurrenceRepository;
 import com.crawler.domains.occurrences.models.Occurrence;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.ai.ollama.OllamaChatModel;
 
 import static com.crawler.domains.scanner.processors.DocumentPatternProcessor.CHAR_WINDOW_LENGTH;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class InferenceService {
 
     private final InferenceRepository inferenceRepository;
     private final OccurrenceRepository occurrenceRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final OllamaChatModel ollamaChatModel;
+
     public final static int SYNTHESIS_FIRST_FACTOR = 2;
 
-    @Value("${ollama.api.url}")
-    private String ollamaApiUrl;
-
-    @Transactional
     public void saveInference(InferenceDTO inferenceDTO) {
         Occurrence occurrence = occurrenceRepository.findById(inferenceDTO.getOccurrenceId())
                 .orElseThrow(() -> new IllegalArgumentException("Occurrence not found"));
@@ -41,7 +32,6 @@ public class InferenceService {
         inferenceRepository.save(inference);
     }
 
-    @Transactional
     public void extractInference(OccurrenceDTO occurrenceDTO) {
         String prompt = """
             Given the following text, make more sense of it, knowing that it is about finding the recurrence of this regexp %s.
@@ -58,18 +48,11 @@ public class InferenceService {
             Please make the answer no longer than %s characters.
             """.formatted(occurrenceDTO.getSurroundingText(), CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-
-        HttpEntity<String> entity = new HttpEntity<>(prompt, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(ollamaApiUrl, HttpMethod.POST, entity, String.class);
-
-        String inferredText = response.getBody();
+        String response = ollamaChatModel.call(prompt);
 
         InferenceDTO inferenceDTO = new InferenceDTO();
         inferenceDTO.setOccurrenceId(occurrenceDTO.getId());
-        inferenceDTO.setInferredText(inferredText);
+        inferenceDTO.setInferredText(response);
 
         saveInference(inferenceDTO);
 

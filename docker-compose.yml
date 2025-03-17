@@ -41,8 +41,9 @@ services:
 
   ollama:
     image: ollama/ollama:latest
+    container_name: ollama
     ports:
-      - "8086:8086"
+      - "8081:8081"
     networks:
       - app-network
 

@@ -21,8 +21,8 @@ public class DocumentPatternProcessor {
 
     public final static int CHAR_WINDOW_LENGTH = 2000;
 
-    public List<OccurrenceDTO> detectPatterns(String text) {
-        List<RegexpProjection> listedPatterns = regexpRepository.findAllBy();
+    public List<OccurrenceDTO> detectPatterns(String text, Long topicId) {
+        List<RegexpProjection> listedPatterns = topicId == null ? regexpRepository.findAllBy() : regexpRepository.findAllByTopicId(topicId);
 
         return listedPatterns.stream()
                 .map(regexpProjection -> findPatternOccurrences(regexpProjection, text))

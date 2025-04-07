@@ -21,10 +21,9 @@ public class DocumentScanListener {
     private final DocumentScannerService scannerService;
     private final OccurrenceService occurrenceService;
 
-    @KafkaListener(topics = KAFKA_DOCUMENT_SCAN_TOPIC, groupId = "document-scanner-group")
-    public void listen(String url) {
-        DocumentScanRequest request = new DocumentScanRequest(url);
-        List<OccurrenceDTO> occurrences = scannerService.scanDocument(request);
+    @KafkaListener(topics = KAFKA_DOCUMENT_SCAN_TOPIC, groupId = "document-scanner-group", containerFactory = "documentScanRequestKafkaListenerContainerFactory")
+    public void listen(DocumentScanRequest documentScanRequest) {
+        List<OccurrenceDTO> occurrences = scannerService.scanDocument(documentScanRequest);
         occurrences.forEach(occurrenceService::onOccurrence);
     }
 }

@@ -11,4 +11,5 @@ import java.util.List;
 public interface RegexpRepository extends JpaRepository<Regexp, Long> {
     List<Regexp> findByPattern(String pattern);
     List<RegexpProjection> findAllBy();
+    List<RegexpProjection> findAllByTopicId(Long topicId);
 }

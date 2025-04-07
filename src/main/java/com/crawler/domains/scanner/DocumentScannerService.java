@@ -15,10 +15,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,7 +32,7 @@ public class DocumentScannerService {
     private final DocumentDownloadService documentDownloadService;
     private final OccurrenceService occurrenceService;
     private final FileUtils fileUtils;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, DocumentScanRequest> kafkaTemplate;
     private static final String APPLICATION_PDF = "application/pdf";
     public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
     private static final  int FETCH_RATE_MILLISECONDS = 200;
@@ -43,8 +41,9 @@ public class DocumentScannerService {
     public List<OccurrenceDTO> scanDocument(DocumentScanRequest request) {
         try {
             String documentUrl = request.getUrl();
+            Long topicId = request.getTopicId();
             byte[] pdfBytes = documentDownloadService.downloadFile(documentUrl);
-            List<OccurrenceDTO> occurrences = scanPdf(pdfBytes);
+            List<OccurrenceDTO> occurrences = scanPdf(pdfBytes, topicId);
             occurrences.forEach(occurrence -> {
                 occurrence.setUrl(documentUrl);
             });
@@ -54,33 +53,25 @@ public class DocumentScannerService {
         }
     }
 
-    public List<OccurrenceDTO> scanUploadedDocument(MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream()) {
-            byte[] pdfBytes = fileUtils.readInputStreamInChunks(inputStream);
-            return scanPdf(pdfBytes);
-        } catch (IOException e) {
-            throw new DocumentScanException("Failed to process the uploaded PDF file", e);
-        }
-    }
-
     public void scanBulkDocuments(BulkDocumentScanRequest request) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
-
+        Long topicId = request.getTopicId();
         List<String> urls = request.getUrls();
         for (int i = 0; i < urls.size(); i++) {
             final String url = urls.get(i);
-            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, url), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
+            DocumentScanRequest documentScanRequest = new DocumentScanRequest(url, topicId);
+            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, documentScanRequest), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
 
         scheduler.shutdown();
     }
 
-    private List<OccurrenceDTO> scanPdf(byte[] pdfBytes) throws IOException {
+    private List<OccurrenceDTO> scanPdf(byte[] pdfBytes, Long topicId) throws IOException {
         fileUtils.validateFileType(pdfBytes, APPLICATION_PDF);
         try (PDDocument document = Loader.loadPDF(pdfBytes)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-            return patternValidator.detectPatterns(text);
+            return patternValidator.detectPatterns(text, topicId);
         }
     }
 }

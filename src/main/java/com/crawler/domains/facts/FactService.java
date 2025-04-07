@@ -34,7 +34,7 @@ public class FactService {
 
     public void extractFact(OccurrenceDTO occurrenceDTO) {
         String prompt = """
-            Given the following text, make more sense of it, knowing that it is about finding the recurrence of this regexp %s.
+            Given the following text, make more sense of the reason why this regexp occurs, knowing that it is about finding the recurrence of this regexp %s.
             """.formatted(occurrenceDTO.getPattern());
 
         if (occurrenceDTO.getDescription() != null && !occurrenceDTO.getDescription().isEmpty()) {
@@ -46,8 +46,7 @@ public class FactService {
         prompt += """
             Here is the text: %s
             Please make the answer no longer than %s characters.
-            Do not repeat yourself saying it matches the pattern, that is already intended.
-            I would like to understand more WHY it is mentioned there and WHAT IT TALKS ABOUT in that particular frame.
+            I would like to understand more WHY the regexp is mentioned there and the fact that can be extrapolated from it.
             Your answer should ONLY contain the nugget of information extracted from the test, like one or multiple facts.
             """.formatted(occurrenceDTO.getSurroundingText(), CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
 

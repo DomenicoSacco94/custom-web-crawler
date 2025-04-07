@@ -37,7 +37,7 @@ public class RegexpValidatorTest {
     public void testDocWithoutBlacklist() {
         String docText = "some text extracted from the document DE89 3704 0044 0532 0130 01";
 
-        List<OccurrenceDTO> occurrences = processor.detectPatterns(docText);
+        List<OccurrenceDTO> occurrences = processor.detectPatterns(docText, null);
 
         assertEquals(0, occurrences.size());
     }
@@ -46,7 +46,7 @@ public class RegexpValidatorTest {
     public void testDocWithBlacklistedRegexp() {
         String docText = "some text extracted from the document DE15 3006 0601 0505 7807 80";
 
-        List<OccurrenceDTO> occurrences = processor.detectPatterns(docText);
+        List<OccurrenceDTO> occurrences = processor.detectPatterns(docText, null);
 
         assertEquals(1, occurrences.size());
         assertEquals("DE15\\s3006\\s0601\\s0505\\s7807\\s80", occurrences.get(0).getPattern());

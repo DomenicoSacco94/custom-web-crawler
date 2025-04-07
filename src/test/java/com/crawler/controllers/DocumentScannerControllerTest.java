@@ -1,6 +1,5 @@
 package com.crawler.controllers;
 
-import com.crawler.domains.topics.regexp.models.Regexp;
 import com.crawler.domains.scanner.DocumentScannerController;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,10 +34,10 @@ class DocumentScannerControllerTest {
 
     @Test
     void testScanDocument() {
-        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(null, new Regexp(), "surroundingText", null));
+        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO());
         when(scannerService.scanDocument(any(DocumentScanRequest.class))).thenReturn(mockOccurrences);
 
-        DocumentScanRequest request = new DocumentScanRequest("http://example.com/document.pdf");
+        DocumentScanRequest request = new DocumentScanRequest("http://example.com/document.pdf", null);
 
         ResponseEntity<List<OccurrenceDTO>> response = documentScannerController.scanDocument(request);
 
@@ -49,21 +47,8 @@ class DocumentScannerControllerTest {
     }
 
     @Test
-    void testScanUploadedDocument() {
-        MultipartFile file = mock(MultipartFile.class);
-        List<OccurrenceDTO> mockOccurrences = List.of(new OccurrenceDTO(null, new Regexp(), "surroundingText", null));
-        when(scannerService.scanUploadedDocument(any(MultipartFile.class))).thenReturn(mockOccurrences);
-
-        ResponseEntity<List<OccurrenceDTO>> response = documentScannerController.scanUploadedDocument(file);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockOccurrences, response.getBody());
-        verify(scannerService, times(1)).scanUploadedDocument(file);
-    }
-
-    @Test
     void testScanBulkDocuments() {
-        BulkDocumentScanRequest request = new BulkDocumentScanRequest(List.of("http://example.com/document1.pdf", "http://example.com/document2.pdf"));
+        BulkDocumentScanRequest request = new BulkDocumentScanRequest(List.of("http://example.com/document1.pdf", "http://example.com/document2.pdf"), null);
         doNothing().when(scannerService).scanBulkDocuments(any(BulkDocumentScanRequest.class));
 
         ResponseEntity<Void> response = documentScannerController.scanBulkDocuments(request);

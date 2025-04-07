@@ -9,4 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class BulkDocumentScanRequest {
     private List<String> urls;
+    private Long topicId;
 }

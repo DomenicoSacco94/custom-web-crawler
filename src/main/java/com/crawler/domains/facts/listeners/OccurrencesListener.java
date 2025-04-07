@@ -14,7 +14,7 @@ public class OccurrencesListener {
 
     private final FactService factService;
 
-    @KafkaListener(topics = OCCURRENCE_FACT_TOPIC, groupId = "facts-group", containerFactory = "jsonKafkaListenerContainerFactory")
+    @KafkaListener(topics = OCCURRENCE_FACT_TOPIC, groupId = "facts-group", containerFactory = "occurrenceKafkaListenerContainerFactory")
     public void listen(OccurrenceDTO occurrenceDTO) {
         factService.extractFact(occurrenceDTO);
     }

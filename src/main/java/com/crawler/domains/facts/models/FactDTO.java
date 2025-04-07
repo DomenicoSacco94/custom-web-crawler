@@ -1,9 +1,9 @@
-package com.crawler.domains.inferences.models;
+package com.crawler.domains.facts.models;
 
 import lombok.Data;
 
 @Data
-public class InferenceDTO {
+public class FactDTO {
     private Long id;
     private Long occurrenceId;
     private String inferredText;

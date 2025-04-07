@@ -1,7 +1,7 @@
-package com.crawler.domains.inferences;
+package com.crawler.domains.facts;
 
-import com.crawler.domains.inferences.models.Inference;
-import com.crawler.domains.inferences.models.InferenceDTO;
+import com.crawler.domains.facts.models.Fact;
+import com.crawler.domains.facts.models.FactDTO;
 import com.crawler.domains.occurrences.OccurrenceRepository;
 import com.crawler.domains.occurrences.models.Occurrence;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
@@ -13,26 +13,26 @@ import static com.crawler.domains.scanner.processors.DocumentPatternProcessor.CH
 
 @Service
 @AllArgsConstructor
-public class InferenceService {
+public class FactService {
 
-    private final InferenceRepository inferenceRepository;
+    private final FactRepository factRepository;
     private final OccurrenceRepository occurrenceRepository;
     private final OllamaChatModel ollamaChatModel;
 
     public final static int SYNTHESIS_FIRST_FACTOR = 2;
 
-    public void saveInference(InferenceDTO inferenceDTO) {
-        Occurrence occurrence = occurrenceRepository.findById(inferenceDTO.getOccurrenceId())
+    public void saveFact(FactDTO factDTO) {
+        Occurrence occurrence = occurrenceRepository.findById(factDTO.getOccurrenceId())
                 .orElseThrow(() -> new IllegalArgumentException("Occurrence not found"));
 
-        Inference inference = new Inference();
-        inference.setOccurrence(occurrence);
-        inference.setInferredText(inferenceDTO.getInferredText());
+        Fact fact = new Fact();
+        fact.setOccurrence(occurrence);
+        fact.setInferredText(factDTO.getInferredText());
 
-        inferenceRepository.save(inference);
+        factRepository.save(fact);
     }
 
-    public void extractInference(OccurrenceDTO occurrenceDTO) {
+    public void extractFact(OccurrenceDTO occurrenceDTO) {
         String prompt = """
             Given the following text, make more sense of it, knowing that it is about finding the recurrence of this regexp %s.
             """.formatted(occurrenceDTO.getPattern());
@@ -53,11 +53,11 @@ public class InferenceService {
 
         String response = ollamaChatModel.call(prompt);
 
-        InferenceDTO inferenceDTO = new InferenceDTO();
-        inferenceDTO.setOccurrenceId(occurrenceDTO.getId());
-        inferenceDTO.setInferredText(response);
+        FactDTO factDTO = new FactDTO();
+        factDTO.setOccurrenceId(occurrenceDTO.getId());
+        factDTO.setInferredText(response);
 
-        saveInference(inferenceDTO);
+        saveFact(factDTO);
 
     }
 }

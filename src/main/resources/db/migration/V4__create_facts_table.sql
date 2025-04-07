@@ -1,4 +1,4 @@
-CREATE TABLE inferences (
+CREATE TABLE facts (
     id SERIAL PRIMARY KEY,
     occurrence_id BIGINT NOT NULL,
     inferred_text TEXT NOT NULL,

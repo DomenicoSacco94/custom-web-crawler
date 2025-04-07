@@ -1,4 +1,4 @@
-package com.crawler.domains.inferences.models;
+package com.crawler.domains.facts.models;
 
 import com.crawler.domains.occurrences.models.Occurrence;
 import jakarta.persistence.*;
@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "inferences")
-public class Inference {
+@Table(name = "facts")
+public class Fact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class OccurrenceService {
     private final OccurrenceRepository repository;
-    private final OccurrenceMapper occurrenceMapper = OccurrenceMapper.INSTANCE;
+    private final OccurrenceMapper occurrenceMapper;
     private final KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
     public static final String OCCURRENCE_FACT_TOPIC = "occurrence-fact-topic";
 

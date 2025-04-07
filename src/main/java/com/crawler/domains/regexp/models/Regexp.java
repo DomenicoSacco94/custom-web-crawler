@@ -25,6 +25,9 @@ public class Regexp {
     @Column
     private String description;
 
+    @Column(name = "topic_id", nullable = false)
+    private Long topicId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

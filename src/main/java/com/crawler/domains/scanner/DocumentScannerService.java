@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DocumentScannerService {
 
-    private final OccurrenceMapper occurrenceMapper = OccurrenceMapper.INSTANCE;
+    private final OccurrenceMapper occurrenceMapper;
     private final DocumentPatternProcessor patternValidator;
     private final DocumentDownloadService documentDownloadService;
     private final OccurrenceService occurrenceService;

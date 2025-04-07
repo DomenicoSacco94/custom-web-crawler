@@ -22,9 +22,9 @@ public class DocumentPatternProcessor {
     public final static int CHAR_WINDOW_LENGTH = 2000;
 
     public List<OccurrenceDTO> detectPatterns(String text) {
-        List<RegexpProjection> blacklistedPatterns = regexpRepository.findAllBy();
+        List<RegexpProjection> listedPatterns = regexpRepository.findAllBy();
 
-        return blacklistedPatterns.stream()
+        return listedPatterns.stream()
                 .map(regexpProjection -> findPatternOccurrences(regexpProjection, text))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());

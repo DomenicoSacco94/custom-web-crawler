@@ -3,10 +3,15 @@ package com.crawler.domains.regexp.models;
 
 import com.crawler.domains.regexp.models.validator.ValidRegexp;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class RegexpDTO {
     private Long id;
 
@@ -15,6 +20,8 @@ public class RegexpDTO {
     private String pattern;
 
     private String description;
+
+    private Long topicId;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

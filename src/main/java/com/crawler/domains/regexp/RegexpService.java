@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class RegexpService {
 
     private final RegexpRepository repository;
-    private final RegexpMapper mapper = RegexpMapper.INSTANCE;
+    private final RegexpMapper mapper;
 
     public RegexpDTO addPattern(RegexpDTO dto) {
         log.info("Adding Pattern: {}", dto.getPattern());

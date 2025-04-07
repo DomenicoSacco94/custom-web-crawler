@@ -40,7 +40,7 @@ public class FactService {
 
     public void extractFact(OccurrenceDTO occurrenceDTO) {
         String prompt = """
-            Given the following text, make more sense of the reason why this regexp occurs, knowing that it is about finding the recurrence of this regexp %s.
+            Given the following text, knowing that it is about finding the recurrence of this regexp %s.
             """.formatted(occurrenceDTO.getPattern());
 
         if (occurrenceDTO.getDescription() != null && !occurrenceDTO.getDescription().isEmpty()) {
@@ -51,9 +51,9 @@ public class FactService {
 
         prompt += """
             Here is the text: %s
+            I would you to write only the fact that can be extrapolated from it.
+            Your answer should ONLY contain the nugget of information extracted from the test.
             Please make the answer no longer than %s characters.
-            I would like to understand more WHY the regexp is mentioned there and the fact that can be extrapolated from it.
-            Your answer should ONLY contain the nugget of information extracted from the test, like one or multiple facts.
             """.formatted(occurrenceDTO.getSurroundingText(), CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
 
         String response = ollamaChatModel.call(prompt);

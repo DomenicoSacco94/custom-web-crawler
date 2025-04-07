@@ -39,7 +39,7 @@ public class DocumentPatternProcessor {
                 int start = Math.max(0, matcher.start() - CHAR_WINDOW_LENGTH /2);
                 int end = Math.min(text.length(), matcher.end() + CHAR_WINDOW_LENGTH /2);
                 String surroundingText = text.substring(start, end);
-                return new OccurrenceDTO(null, regexp.getPattern(), regexp.getDescription(), surroundingText, null);
+                return new OccurrenceDTO(null, regexp.getPattern(), regexp.getTopicId(), regexp.getDescription(), surroundingText, null);
             }
         }
         return null;

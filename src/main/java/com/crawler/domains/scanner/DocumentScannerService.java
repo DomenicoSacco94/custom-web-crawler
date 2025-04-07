@@ -46,6 +46,7 @@ public class DocumentScannerService {
             List<OccurrenceDTO> occurrences = scanPdf(pdfBytes, topicId);
             occurrences.forEach(occurrence -> {
                 occurrence.setUrl(documentUrl);
+                occurrence.setTopicId(topicId);
             });
             return occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
         } catch (IOException e) {

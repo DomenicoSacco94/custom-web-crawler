@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class OccurrenceDTO {
     private Long id;
     private String pattern;
+    private Long topicId;
     private String description;
     private String surroundingText;
     private String url;

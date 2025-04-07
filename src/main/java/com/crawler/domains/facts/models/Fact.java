@@ -16,10 +16,12 @@ public class Fact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "occurrence_id", nullable = false)
-    private Occurrence occurrence;
+    @Column(name = "occurrence_id", nullable = false)
+    private Long occurrenceId;
 
     @Column(nullable = false)
     private String inferredText;
+
+    @Column(name = "topic_id", nullable = false)
+    private Long topicId;
 }

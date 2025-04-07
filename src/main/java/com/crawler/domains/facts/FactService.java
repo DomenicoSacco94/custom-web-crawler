@@ -1,5 +1,6 @@
 package com.crawler.domains.facts;
 
+import com.crawler.domains.facts.mappers.FactMapper;
 import com.crawler.domains.facts.models.Fact;
 import com.crawler.domains.facts.models.FactDTO;
 import com.crawler.domains.occurrences.OccurrenceRepository;
@@ -8,6 +9,9 @@ import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.ollama.OllamaChatModel;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.crawler.domains.scanner.processors.DocumentPatternProcessor.CHAR_WINDOW_LENGTH;
 
@@ -18,6 +22,7 @@ public class FactService {
     private final FactRepository factRepository;
     private final OccurrenceRepository occurrenceRepository;
     private final OllamaChatModel ollamaChatModel;
+    private final FactMapper factMapper;
 
     public final static int SYNTHESIS_FIRST_FACTOR = 2;
 
@@ -26,7 +31,8 @@ public class FactService {
                 .orElseThrow(() -> new IllegalArgumentException("Occurrence not found"));
 
         Fact fact = new Fact();
-        fact.setOccurrence(occurrence);
+        fact.setOccurrenceId(occurrence.getId());
+        fact.setTopicId(occurrence.getTopicId());
         fact.setInferredText(factDTO.getInferredText());
 
         factRepository.save(fact);
@@ -58,5 +64,12 @@ public class FactService {
 
         saveFact(factDTO);
 
+    }
+
+    public List<FactDTO> getFactsByTopic(Long topicId) {
+        List<Fact> facts = factRepository.findByTopicId(topicId);
+        return facts.stream()
+                .map(factMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

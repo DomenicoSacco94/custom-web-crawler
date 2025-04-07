@@ -24,6 +24,9 @@ public class Occurrence {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surroundingText;
 
+    @Column(name = "topic_id")
+    private Long topicId;
+
     @Column(columnDefinition = "TEXT")
     private String url;
 }

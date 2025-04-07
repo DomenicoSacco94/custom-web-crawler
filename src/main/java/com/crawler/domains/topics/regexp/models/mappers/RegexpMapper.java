@@ -1,7 +1,7 @@
-package com.crawler.domains.regexp.models.mappers;
+package com.crawler.domains.topics.regexp.models.mappers;
 
-import com.crawler.domains.regexp.models.Regexp;
-import com.crawler.domains.regexp.models.RegexpDTO;
+import com.crawler.domains.topics.regexp.models.Regexp;
+import com.crawler.domains.topics.regexp.models.RegexpDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

@@ -1,4 +1,4 @@
-package com.crawler.domains.regexp.models;
+package com.crawler.domains.topics.regexp.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

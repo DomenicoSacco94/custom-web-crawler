@@ -1,6 +1,6 @@
 package com.crawler.controllers;
 
-import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.topics.regexp.models.Regexp;
 import com.crawler.domains.scanner.DocumentScannerController;
 import com.crawler.domains.scanner.DocumentScannerService;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;

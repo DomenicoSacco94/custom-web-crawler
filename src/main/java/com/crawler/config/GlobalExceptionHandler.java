@@ -1,7 +1,5 @@
 package com.crawler.config;
 
-import com.crawler.domains.regexp.exceptions.PatternAlreadyExistsException;
-import com.crawler.domains.regexp.exceptions.PatternNotFoundException;
 import com.crawler.domains.scanner.exceptions.DocumentScanException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
 import com.crawler.domains.scanner.exceptions.InvalidDocumentUrlException;
@@ -37,16 +35,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidDocumentUrlException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidDocumentUrlException(InvalidDocumentUrlException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PatternNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleRegexpNotFoundException(PatternNotFoundException ex) {
-        return exceptionUtils.handleScannerException(ex, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(PatternAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleRegexpAlreadyExistsException(PatternAlreadyExistsException ex) {
-        return exceptionUtils.handleScannerException(ex, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

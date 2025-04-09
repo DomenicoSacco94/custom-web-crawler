@@ -24,7 +24,7 @@ public class FactService {
     private final OllamaChatModel ollamaChatModel;
     private final FactMapper factMapper;
 
-    public final static int SYNTHESIS_FIRST_FACTOR = 2;
+    public final static int SYNTHESIS_FIRST_FACTOR = 5;
 
     public void saveFact(FactDTO factDTO) {
         Occurrence occurrence = occurrenceRepository.findById(factDTO.getOccurrenceId())

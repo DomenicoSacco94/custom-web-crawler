@@ -43,6 +43,7 @@ ext {
     okhttpVersion = '4.12.0'
     kafkaVersion = '3.3.3'
     springOllamaVersion = '1.0.0-M6'
+    jsoupVersion = '1.19.1'
 }
 
 dependencies {
@@ -97,6 +98,9 @@ dependencies {
 
     // Ollama integration
     implementation "org.springframework.ai:spring-ai-ollama-spring-boot-starter:${springOllamaVersion}"
+
+    // Web crawler integration
+    implementation "org.jsoup:jsoup:${jsoupVersion}"
 }
 
 tasks.named('test') {

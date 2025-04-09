@@ -7,12 +7,8 @@ import com.crawler.domains.scanner.models.DocumentScanRequest;
 import com.crawler.domains.scanner.models.BulkDocumentScanRequest;
 import com.crawler.domains.scanner.processors.DocumentPatternProcessor;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
-import com.crawler.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,26 +27,24 @@ public class DocumentScannerService {
     private final DocumentPatternProcessor patternValidator;
     private final DocumentDownloadService documentDownloadService;
     private final OccurrenceService occurrenceService;
-    private final FileUtils fileUtils;
     private final KafkaTemplate<String, DocumentScanRequest> kafkaTemplate;
-    private static final String APPLICATION_PDF = "application/pdf";
     public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
-    private static final  int FETCH_RATE_MILLISECONDS = 200;
-    private static final  int THREAD_POOL_SIZE = 15;
+    private static final int FETCH_RATE_MILLISECONDS = 200;
+    private static final int THREAD_POOL_SIZE = 15;
 
     public List<OccurrenceDTO> scanDocument(DocumentScanRequest request) {
         try {
             String documentUrl = request.getUrl();
             Long topicId = request.getTopicId();
-            byte[] pdfBytes = documentDownloadService.downloadFile(documentUrl);
-            List<OccurrenceDTO> occurrences = scanPdf(pdfBytes, topicId);
+            String textContent = documentDownloadService.downloadAndExtractText(documentUrl);
+            List<OccurrenceDTO> occurrences = patternValidator.detectPatterns(textContent, topicId);
             occurrences.forEach(occurrence -> {
                 occurrence.setUrl(documentUrl);
                 occurrence.setTopicId(topicId);
             });
             return occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
         } catch (IOException e) {
-            throw new DocumentScanException("Failed to process the PDF file from: " + request.getUrl(), e);
+            throw new DocumentScanException("Failed to process the document from: " + request.getUrl(), e);
         }
     }
 
@@ -65,14 +59,5 @@ public class DocumentScannerService {
         }
 
         scheduler.shutdown();
-    }
-
-    private List<OccurrenceDTO> scanPdf(byte[] pdfBytes, Long topicId) throws IOException {
-        fileUtils.validateFileType(pdfBytes, APPLICATION_PDF);
-        try (PDDocument document = Loader.loadPDF(pdfBytes)) {
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String text = pdfStripper.getText(document);
-            return patternValidator.detectPatterns(text, topicId);
-        }
     }
 }

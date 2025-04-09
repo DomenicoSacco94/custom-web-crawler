@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class DocumentDownloadService {
 
     private static final Pattern URL_PATTERN = Pattern.compile(
-        "^(https?|ftp)://[\\w.-]+(:\\d+)?(/([\\w/_.-]*)?)?$", Pattern.CASE_INSENSITIVE);
+            "^(https?|ftp)://[\\w.-]+(:\\d+)?(/([\\w/_.-]*)?)?(\\?[\\w=&%.-]*)?(#[\\w-]*)?$", Pattern.CASE_INSENSITIVE);
 
     private final FileUtils fileUtils;
 

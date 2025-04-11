@@ -37,7 +37,7 @@ public class DocumentScannerServiceTest {
         Long topicId = 1L;
 
         when(documentDownloadService.downloadAndExtractText(pdfUrl)).thenReturn(pdfText);
-        when(patternProcessor.detectPatterns(pdfText, topicId)).thenReturn(List.of(new OccurrenceDTO()));
+        when(patternProcessor.detectPatterns(pdfText, topicId, pdfUrl)).thenReturn(List.of(new OccurrenceDTO()));
 
         DocumentScanRequest request = new DocumentScanRequest(pdfUrl, topicId);
         List<OccurrenceDTO> occurrences = documentScannerService.scanDocument(request);
@@ -53,7 +53,7 @@ public class DocumentScannerServiceTest {
         Long topicId = 1L;
 
         when(documentDownloadService.downloadAndExtractText(htmlUrl)).thenReturn(htmlText);
-        when(patternProcessor.detectPatterns(htmlText, topicId)).thenReturn(List.of(new OccurrenceDTO()));
+        when(patternProcessor.detectPatterns(htmlText, topicId, htmlUrl)).thenReturn(List.of(new OccurrenceDTO()));
 
         DocumentScanRequest request = new DocumentScanRequest(htmlUrl, topicId);
         List<OccurrenceDTO> occurrences = documentScannerService.scanDocument(request);

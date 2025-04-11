@@ -13,8 +13,8 @@ public class FactController {
 
     private final FactService factService;
 
-    @GetMapping("/topic/{topicId}")
-    public List<FactDTO> getFactsByTopic(@PathVariable Long topicId) {
-        return factService.getFactsByTopic(topicId);
+    @GetMapping
+    public List<FactDTO> getFacts() {
+        return factService.getAllFacts();
     }
 }

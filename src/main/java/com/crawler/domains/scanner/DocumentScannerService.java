@@ -49,11 +49,7 @@ public class DocumentScannerService {
             log.info("Analyzing document URL: {}", documentUrl);
             String textContent = documentDownloadService.downloadAndExtractText(documentUrl);
 
-            List<OccurrenceDTO> occurrences = patternValidator.detectPatterns(textContent, topicId);
-            occurrences.forEach(occurrence -> {
-                occurrence.setUrl(documentUrl);
-                occurrence.setTopicId(topicId);
-            });
+            List<OccurrenceDTO> occurrences = patternValidator.detectPatterns(textContent, topicId, documentUrl);
 
             crawlerScanner.markLinkAsAnalyzed(documentUrl);
 

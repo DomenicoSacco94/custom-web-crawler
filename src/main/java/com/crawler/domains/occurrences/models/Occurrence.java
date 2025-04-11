@@ -1,5 +1,6 @@
 package com.crawler.domains.occurrences.models;
 
+import com.crawler.domains.topics.regexp.models.Regexp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,17 +16,12 @@ public class Occurrence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String pattern;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "regexp_id")
+    private Regexp regexp;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surroundingText;
-
-    @Column(name = "topic_id")
-    private Long topicId;
 
     @Column(columnDefinition = "TEXT")
     private String url;

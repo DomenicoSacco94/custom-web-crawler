@@ -23,7 +23,7 @@ public class CrawlerScanner {
         Elements anchorTags = document.select("a[href]");
 
         for (Element anchor : anchorTags) {
-            String link = anchor.attr("abs:href"); // Get absolute URL
+            String link = anchor.attr("abs:href");
             if (!analyzedLinks.contains(link)) {
                 newLinks.add(link);
             }

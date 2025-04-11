@@ -32,7 +32,6 @@ public class FactService {
 
         Fact fact = new Fact();
         fact.setOccurrenceId(occurrence.getId());
-        fact.setTopicId(occurrence.getTopicId());
         fact.setInferredText(factDTO.getInferredText());
 
         factRepository.save(fact);
@@ -41,12 +40,15 @@ public class FactService {
     public void extractFact(OccurrenceDTO occurrenceDTO) {
         String prompt = """
             Given the following text, make more sense of it, knowing that it is about finding the recurrence of this regexp %s.
-            """.formatted(occurrenceDTO.getPattern());
+            """.formatted(occurrenceDTO.getRegexpDTO().getPattern());
 
-        if (occurrenceDTO.getDescription() != null && !occurrenceDTO.getDescription().isEmpty()) {
+        String description = occurrenceDTO.getRegexpDTO().getDescription();
+        String surroundingText = occurrenceDTO.getSurroundingText();
+
+        if (description != null && !description.isEmpty()) {
             prompt += """
                 Description: %s
-                """.formatted(occurrenceDTO.getDescription());
+                """.formatted(description);
         }
 
         prompt += """
@@ -55,7 +57,7 @@ public class FactService {
             Do not repeat yourself saying it matches the pattern, that is already intended.
             I would like to understand more WHY it is mentioned there and WHAT IT TALKS ABOUT in that particular frame.
             Your answer should ONLY contain the nugget of information extracted from the test, like one or multiple facts.
-            """.formatted(occurrenceDTO.getSurroundingText(), CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
+            """.formatted(surroundingText, CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
 
         String response = ollamaChatModel.call(prompt);
 
@@ -67,8 +69,8 @@ public class FactService {
 
     }
 
-    public List<FactDTO> getFactsByTopic(Long topicId) {
-        List<Fact> facts = factRepository.findByTopicId(topicId);
+    public List<FactDTO> getAllFacts() {
+        List<Fact> facts = factRepository.findAll();
         return facts.stream()
                 .map(factMapper::toDto)
                 .collect(Collectors.toList());

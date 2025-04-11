@@ -1,6 +1,5 @@
 package com.crawler.domains.facts.models;
 
-import com.crawler.domains.occurrences.models.Occurrence;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,4 @@ public class Fact {
 
     @Column(nullable = false)
     private String inferredText;
-
-    @Column(name = "topic_id", nullable = false)
-    private Long topicId;
 }

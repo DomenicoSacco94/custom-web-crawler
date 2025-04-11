@@ -7,5 +7,4 @@ public class FactDTO {
     private Long id;
     private Long occurrenceId;
     private String inferredText;
-    private Long topicId;
 }

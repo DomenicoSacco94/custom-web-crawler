@@ -1,5 +1,6 @@
 package com.crawler.domains.occurrences.models;
 
+import com.crawler.domains.topics.regexp.models.RegexpDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +12,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OccurrenceDTO {
     private Long id;
-    private String pattern;
-    private Long topicId;
-    private String description;
+    private RegexpDTO regexpDTO;
     private String surroundingText;
     private String url;
 }

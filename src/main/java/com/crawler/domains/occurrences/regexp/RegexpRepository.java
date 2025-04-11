@@ -1,7 +1,7 @@
-package com.crawler.domains.topics.regexp;
+package com.crawler.domains.occurrences.regexp;
 
-import com.crawler.domains.topics.regexp.models.Regexp;
-import com.crawler.domains.topics.regexp.models.RegexpProjection;
+import com.crawler.domains.occurrences.regexp.models.Regexp;
+import com.crawler.domains.occurrences.regexp.models.RegexpProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

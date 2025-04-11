@@ -1,7 +1,7 @@
-package com.crawler.domains.topics.regexp.models;
+package com.crawler.domains.occurrences.regexp.models;
 
 
-import com.crawler.domains.topics.regexp.models.validator.ValidRegexp;
+import com.crawler.domains.occurrences.regexp.models.validator.ValidRegexp;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

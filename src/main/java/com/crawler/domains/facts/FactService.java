@@ -3,8 +3,6 @@ package com.crawler.domains.facts;
 import com.crawler.domains.facts.mappers.FactMapper;
 import com.crawler.domains.facts.models.Fact;
 import com.crawler.domains.facts.models.FactDTO;
-import com.crawler.domains.occurrences.OccurrenceRepository;
-import com.crawler.domains.occurrences.models.Occurrence;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,22 +18,10 @@ import static com.crawler.domains.scanner.processors.DocumentPatternProcessor.CH
 public class FactService {
 
     private final FactRepository factRepository;
-    private final OccurrenceRepository occurrenceRepository;
     private final OllamaChatModel ollamaChatModel;
     private final FactMapper factMapper;
 
     public final static int SYNTHESIS_FIRST_FACTOR = 5;
-
-    public void saveFact(FactDTO factDTO) {
-        Occurrence occurrence = occurrenceRepository.findById(factDTO.getOccurrenceId())
-                .orElseThrow(() -> new IllegalArgumentException("Occurrence not found"));
-
-        Fact fact = new Fact();
-        fact.setOccurrenceId(occurrence.getId());
-        fact.setInferredText(factDTO.getInferredText());
-
-        factRepository.save(fact);
-    }
 
     public void extractFact(OccurrenceDTO occurrenceDTO) {
         String prompt = """
@@ -62,10 +48,10 @@ public class FactService {
         String response = ollamaChatModel.call(prompt);
 
         FactDTO factDTO = new FactDTO();
-        factDTO.setOccurrenceId(occurrenceDTO.getId());
+        factDTO.setOccurrenceDTO(occurrenceDTO);
         factDTO.setInferredText(response);
 
-        saveFact(factDTO);
+        factRepository.save(factMapper.toEntity(factDTO));
 
     }
 

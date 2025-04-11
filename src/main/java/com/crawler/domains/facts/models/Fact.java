@@ -1,5 +1,6 @@
 package com.crawler.domains.facts.models;
 
+import com.crawler.domains.occurrences.models.Occurrence;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,9 @@ public class Fact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "occurrence_id", nullable = false)
-    private Long occurrenceId;
+    @ManyToOne
+    @JoinColumn(name = "occurrence_id", nullable = false)
+    private Occurrence occurrence;
 
     @Column(nullable = false)
     private String inferredText;

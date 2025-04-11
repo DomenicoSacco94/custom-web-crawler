@@ -1,4 +1,4 @@
-CREATE TABLE regexp_occurrences (
+CREATE TABLE occurrences (
     id SERIAL PRIMARY KEY,
     regexp_id INTEGER NOT NULL,
     surrounding_text TEXT NOT NULL,

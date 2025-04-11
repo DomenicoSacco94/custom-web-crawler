@@ -1,6 +1,6 @@
 package com.crawler.domains.topics.models.mappers;
 
-import com.crawler.domains.topics.regexp.models.mappers.RegexpMapper;
+import com.crawler.domains.occurrences.regexp.models.mappers.RegexpMapper;
 import com.crawler.domains.topics.models.Topic;
 import com.crawler.domains.topics.models.TopicDTO;
 import org.mapstruct.Mapper;

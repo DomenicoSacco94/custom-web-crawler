@@ -1,7 +1,7 @@
 package com.crawler.domains.topics;
 
-import com.crawler.domains.topics.regexp.RegexpRepository;
-import com.crawler.domains.topics.regexp.models.Regexp;
+import com.crawler.domains.occurrences.regexp.RegexpRepository;
+import com.crawler.domains.occurrences.regexp.models.Regexp;
 import com.crawler.domains.topics.models.Topic;
 import com.crawler.domains.topics.models.TopicDTO;
 import com.crawler.domains.topics.models.mappers.TopicMapper;

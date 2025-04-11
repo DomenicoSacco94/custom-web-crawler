@@ -1,6 +1,6 @@
 package com.crawler.domains.occurrences.models;
 
-import com.crawler.domains.topics.regexp.models.RegexpDTO;
+import com.crawler.domains.occurrences.regexp.models.RegexpDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;

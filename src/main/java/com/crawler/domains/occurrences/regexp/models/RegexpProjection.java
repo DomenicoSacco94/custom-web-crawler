@@ -1,4 +1,4 @@
-package com.crawler.domains.topics.regexp.models;
+package com.crawler.domains.occurrences.regexp.models;
 
 /**
  * With this class the <code>regexps</code> table can be queried without fetching all of its content.

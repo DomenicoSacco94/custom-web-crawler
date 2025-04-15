@@ -8,4 +8,5 @@ public class FactDTO {
     private Long id;
     private OccurrenceDTO occurrenceDTO;
     private String inferredText;
+    private String consequences;
 }

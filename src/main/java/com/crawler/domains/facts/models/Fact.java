@@ -22,4 +22,7 @@ public class Fact {
 
     @Column(nullable = false)
     private String inferredText;
+
+    @Column(nullable = false)
+    private String consequences;
 }

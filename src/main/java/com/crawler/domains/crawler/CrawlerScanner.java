@@ -15,17 +15,28 @@ import java.util.Set;
 @Slf4j
 public class CrawlerScanner {
 
+    private static final int MAX_LINKS = 10;
     private final Set<String> analyzedLinks = new HashSet<>();
 
     public Set<String> extractLinksFromPage(String url) throws IOException {
         Set<String> newLinks = new HashSet<>();
         Document document = Jsoup.connect(url).get();
-        Elements anchorTags = document.select("a[href]");
 
-        for (Element anchor : anchorTags) {
-            String link = anchor.attr("abs:href");
-            if (!analyzedLinks.contains(link)) {
-                newLinks.add(link);
+        // Select meaningful sections (e.g., main content)
+        Elements meaningfulSections = document.select("main, article, section");
+
+        for (Element section : meaningfulSections) {
+            Elements anchorTags = section.select("a[href]");
+            for (Element anchor : anchorTags) {
+                String link = anchor.attr("abs:href");
+
+                // Check if the link is already analyzed
+                if (!analyzedLinks.contains(link)) {
+                    newLinks.add(link);
+                    if (newLinks.size() >= MAX_LINKS) {
+                        return newLinks;
+                    }
+                }
             }
         }
         return newLinks;

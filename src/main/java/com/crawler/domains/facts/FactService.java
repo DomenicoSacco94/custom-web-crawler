@@ -5,9 +5,13 @@ import com.crawler.domains.facts.models.Fact;
 import com.crawler.domains.facts.models.FactDTO;
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,38 +25,50 @@ public class FactService {
     private final OllamaChatModel ollamaChatModel;
     private final FactMapper factMapper;
 
-    public final static int SYNTHESIS_FIRST_FACTOR = 5;
+    public static final int SYNTHESIS_FIRST_FACTOR = 5;
+
+    private String hydrateFactPrompt(String template, String description, String text, String charLimit) {
+        return template
+                .replace("{description}", description)
+                .replace("{text}", text)
+                .replace("{char_limit}", charLimit);
+    }
+
+    private String loadFactPromptTemplate(String factPromptFilePath) throws IOException {
+        ClassPathResource resource = new ClassPathResource(factPromptFilePath);
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
 
     public void extractFact(OccurrenceDTO occurrenceDTO) {
-        String prompt = """
-            Given the following text, make more sense of it, knowing that it is about finding the recurrence of this regexp %s.
-            """.formatted(occurrenceDTO.getRegexpDTO().getPattern());
+        String factPromptTemplate;
+        String consequencesPromptTemplate;
+        try {
+            factPromptTemplate = loadFactPromptTemplate("prompts/prompt_extract_fact.txt");
+            consequencesPromptTemplate = loadFactPromptTemplate("prompts/prompt_extract_consequences.txt");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load prompt template", e);
+        }
 
         String description = occurrenceDTO.getRegexpDTO().getDescription();
         String surroundingText = occurrenceDTO.getSurroundingText();
+        String charLimit = String.valueOf(CHAR_WINDOW_LENGTH / SYNTHESIS_FIRST_FACTOR);
 
-        if (description != null && !description.isEmpty()) {
-            prompt += """
-                Description: %s
-                """.formatted(description);
-        }
+        // Hydrate and call for inferredText
+        String factPrompt = hydrateFactPrompt(factPromptTemplate, description, surroundingText, charLimit);
+        String inferredTextResponse = ollamaChatModel.call(factPrompt);
 
-        prompt += """
-            Here is the text: %s
-            Please make the answer no longer than %s characters.
-            Do not repeat yourself saying it matches the pattern, that is already intended.
-            I would like to understand more WHY it is mentioned there and WHAT IT TALKS ABOUT in that particular frame.
-            Your answer should ONLY contain the nugget of information extracted from the test, like one or multiple facts.
-            """.formatted(surroundingText, CHAR_WINDOW_LENGTH/SYNTHESIS_FIRST_FACTOR);
+        // Hydrate and call for consequences
+        String consequencesPrompt = hydrateFactPrompt(consequencesPromptTemplate, description, surroundingText, charLimit);
+        String consequencesResponse = ollamaChatModel.call(consequencesPrompt);
 
-        String response = ollamaChatModel.call(prompt);
-
+        // Populate FactDTO
         FactDTO factDTO = new FactDTO();
         factDTO.setOccurrenceDTO(occurrenceDTO);
-        factDTO.setInferredText(response);
+        factDTO.setInferredText(inferredTextResponse);
+        factDTO.setConsequences(consequencesResponse);
 
+        // Save to repository
         factRepository.save(factMapper.toEntity(factDTO));
-
     }
 
     public List<FactDTO> getAllFacts() {

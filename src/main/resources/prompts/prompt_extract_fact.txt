@@ -1,0 +1,4 @@
+Given the following text {text}, extract a single fact about {description}
+Please make the answer no longer than {char_limit} characters.
+Your answer should ONLY contain fact.
+The answer must be in english.

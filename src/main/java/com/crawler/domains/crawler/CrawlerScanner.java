@@ -15,7 +15,7 @@ import java.util.Set;
 @Slf4j
 public class CrawlerScanner {
 
-    private static final int MAX_LINKS = 10;
+    private static final int MAX_LINKS = 20;
     private final Set<String> analyzedLinks = new HashSet<>();
 
     public Set<String> extractLinksFromPage(String url) throws IOException {

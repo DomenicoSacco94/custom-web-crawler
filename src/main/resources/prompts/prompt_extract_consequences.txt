@@ -1,3 +1,2 @@
-Given the following text about {description}: {text}, judge if the fact is positive, negative or neutral in terms of economic.
-Answer ONLY with [POSITIVE], [NEGATIVE] or [NEUTRAL].
-The answer must be in english.
+Given the following text about {description}: {text}, judge if the fact is [POSITIVE], [NEGATIVE] or [NEUTRAL] in terms of economic.
+Answer ONLY with the word [POSITIVE], [NEGATIVE] or [NEUTRAL].

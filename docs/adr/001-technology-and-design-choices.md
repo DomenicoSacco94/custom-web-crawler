@@ -55,6 +55,4 @@ During the development of this small project, I proceeded by the following itera
 2. Scan a document served by a url
 3. Scan multiple documents coming from different urls asynchronously
 
-I decided to keep the endpoints I created for each iteration, because it makes the microservice more flexible:
-- Some clients might not be able to serve a document from an url and just want to send the file to have it scanned.
-- Some clients might want a synchronous validation because they would otherwise require the setup of an asynchronous communication channel. 
+I decided to keep only the last endpoint I implemented, because it makes the microservice easier to maintain.

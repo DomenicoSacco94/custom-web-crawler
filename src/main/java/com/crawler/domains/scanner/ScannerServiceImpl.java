@@ -31,7 +31,7 @@ public class ScannerServiceImpl implements ScannerService {
     public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
     private static final int FETCH_RATE_MILLISECONDS = 200;
     private static final int THREAD_POOL_SIZE = 5;
-
+    private static final int CRAWLER_MAX_DEPTH = 2;
     private final OccurrenceMapper occurrenceMapper;
     private final RegexpService regexpService;
     private final TopicService topicService;
@@ -41,17 +41,24 @@ public class ScannerServiceImpl implements ScannerService {
     private final PageCrawlerUtils pageCrawlerUtils;
     private final Set<String> scannedLinks = new HashSet<>();
 
+    @Override
     public List<OccurrenceDTO> onDocumentScanRequest(PageScanRequest request) {
         try {
             String documentUrl = request.getUrl();
             Long topicId = request.getTopicId();
+            int currentDepth = request.getDepth();
 
             if (scannedLinks.contains(documentUrl)) {
                 log.info("URL already analyzed: {}", documentUrl);
                 return List.of();
             }
 
-            log.info("Analyzing document URL: {}", documentUrl);
+            if (currentDepth > CRAWLER_MAX_DEPTH) {
+                log.info("Maximum depth reached for URL: {}", documentUrl);
+                return List.of();
+            }
+
+            log.info("Analyzing document URL: {} at depth {}", documentUrl, currentDepth);
             String textContent = downloadUtils.downloadAndExtractText(documentUrl);
 
             List<OccurrenceDTO> occurrences = regexpService.detectPatterns(textContent, topicId, documentUrl);
@@ -61,8 +68,8 @@ public class ScannerServiceImpl implements ScannerService {
             Set<String> newLinks = pageCrawlerUtils.extractLinksFromPage(documentUrl, scannedLinks);
 
             for (String newLink : newLinks) {
-                log.info("Sending Kafka message for link: {}", newLink);
-                kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, new PageScanRequest(newLink, topicId));
+                log.info("Sending Kafka message for link: {} at depth {}", newLink, currentDepth + 1);
+                kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, new PageScanRequest(newLink, topicId, currentDepth + 1));
             }
 
             return occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
@@ -78,7 +85,7 @@ public class ScannerServiceImpl implements ScannerService {
         List<String> urls = request.getUrls();
         for (int i = 0; i < urls.size(); i++) {
             final String url = urls.get(i);
-            PageScanRequest pageScanRequest = new PageScanRequest(url, topicId);
+            PageScanRequest pageScanRequest = new PageScanRequest(url, topicId, 0);
             scheduler.schedule(() -> kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, pageScanRequest), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
 

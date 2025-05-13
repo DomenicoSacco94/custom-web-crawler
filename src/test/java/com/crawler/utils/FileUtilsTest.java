@@ -1,6 +1,6 @@
 package com.crawler.utils;
 
-import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
+import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
 import org.apache.tika.Tika;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class FileUtilsTest {
         Path invalidFilePath = Paths.get("src/test/resources/testfiles/test_png.png");
         byte[] invalidFileContent = Files.readAllBytes(invalidFilePath);
 
-        assertThrows(InvalidDocumentFormatException.class, () ->
+        assertThrows(InvalidContentFormatException.class, () ->
             fileUtils.validateFileType(invalidFileContent, "application/pdf"));
     }
 

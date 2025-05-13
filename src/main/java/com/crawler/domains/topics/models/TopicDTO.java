@@ -1,6 +1,6 @@
 package com.crawler.domains.topics.models;
 
-import com.crawler.domains.occurrences.regexp.models.RegexpDTO;
+import com.crawler.domains.regexp.models.RegexpDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

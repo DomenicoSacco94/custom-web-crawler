@@ -1,7 +1,7 @@
 package com.crawler.config.kafka;
 
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
-import com.crawler.domains.scanner.models.DocumentScanRequest;
+import com.crawler.domains.scanner.models.PageScanRequest;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, DocumentScanRequest> documentRequestProducerFactory() {
+    public ProducerFactory<String, PageScanRequest> documentRequestProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -40,7 +40,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, DocumentScanRequest> documentRequestKafkaTemplate() {
+    public KafkaTemplate<String, PageScanRequest> documentRequestKafkaTemplate() {
         return new KafkaTemplate<>(documentRequestProducerFactory());
     }
 

@@ -1,7 +1,7 @@
 package com.crawler.config.kafka;
 
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
-import com.crawler.domains.scanner.models.DocumentScanRequest;
+import com.crawler.domains.scanner.models.PageScanRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +49,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, DocumentScanRequest> documentScanRequestConsumerFactory() {
+    public ConsumerFactory<String, PageScanRequest> documentScanRequestConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -58,12 +58,12 @@ public class KafkaConsumerConfig {
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, OccurrenceDTO.class.getName());
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new JsonDeserializer<>(DocumentScanRequest.class)));
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new JsonDeserializer<>(PageScanRequest.class)));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, DocumentScanRequest> documentScanRequestKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, DocumentScanRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, PageScanRequest> documentScanRequestKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PageScanRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(documentScanRequestConsumerFactory());
         return factory;
     }

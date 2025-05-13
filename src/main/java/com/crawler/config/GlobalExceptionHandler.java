@@ -1,10 +1,10 @@
 package com.crawler.config;
 
-import com.crawler.domains.scanner.exceptions.DocumentScanException;
-import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
-import com.crawler.domains.scanner.exceptions.InvalidDocumentUrlException;
-import com.crawler.utils.models.ExceptionResponse;
-import com.crawler.utils.ExceptionUtils;
+import com.crawler.domains.scanner.exceptions.ScanException;
+import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
+import com.crawler.domains.scanner.exceptions.InvalidUrlException;
+import com.crawler.utils.exceptions.models.ExceptionResponse;
+import com.crawler.utils.exceptions.ExceptionUtils;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,18 +22,18 @@ public class GlobalExceptionHandler {
 
     private ExceptionUtils exceptionUtils;
 
-    @ExceptionHandler(DocumentScanException.class)
-    public ResponseEntity<ExceptionResponse> handleDocumentScanException(DocumentScanException ex) {
+    @ExceptionHandler(ScanException.class)
+    public ResponseEntity<ExceptionResponse> handleScanException(ScanException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(InvalidDocumentFormatException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidDocumentFormatException(InvalidDocumentFormatException ex) {
+    @ExceptionHandler(InvalidContentFormatException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidContentFormatException(InvalidContentFormatException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidDocumentUrlException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidDocumentUrlException(InvalidDocumentUrlException ex) {
+    @ExceptionHandler(InvalidUrlException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidUrlException(InvalidUrlException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
     }
 

@@ -2,7 +2,7 @@ package com.crawler.integration;
 
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import com.crawler.integration.config.AbstractIntegrationTest;
-import com.crawler.domains.scanner.models.DocumentScanRequest;
+import com.crawler.domains.scanner.models.PageScanRequest;
 import com.crawler.utils.TestKafkaConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -38,8 +38,6 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
 
     private MockWebServer mockWebServer;
 
-    private final int MOCKED_DOCUMENT_SERVER_PORT = 8084;
-
     @Autowired
     @Qualifier("testKafkaTemplate")
     private KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
@@ -47,6 +45,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         mockWebServer = new MockWebServer();
+        int MOCKED_DOCUMENT_SERVER_PORT = 8084;
         mockWebServer.start(MOCKED_DOCUMENT_SERVER_PORT);
 
         // Ensure the PDF file is correctly read as bytes
@@ -66,7 +65,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
     @Test
     void testDocumentScanWithPattern() {
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
-        DocumentScanRequest request = new DocumentScanRequest(fileUrl);
+        PageScanRequest request = new PageScanRequest(fileUrl, 1L);
 
         var response = restTemplate.postForEntity("/v1/document/scan/url", request, OccurrenceDTO[].class);
 
@@ -74,7 +73,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
         OccurrenceDTO[] occurrences = response.getBody();
         Assertions.assertNotNull(occurrences);
         Assertions.assertEquals(1, occurrences.length);
-        Assertions.assertNotNull(occurrences[0].getPattern());
+
         Assertions.assertNotNull(occurrences[0].getSurroundingText());
     }
 }

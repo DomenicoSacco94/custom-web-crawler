@@ -1,6 +1,6 @@
 package com.crawler.utils;
 
-import com.crawler.domains.scanner.exceptions.InvalidDocumentFormatException;
+import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -34,7 +34,7 @@ public class FileUtils {
     public void validateFileType(byte[] fileBytes, String expectedMimeType) {
         String mimeType = tika.detect(fileBytes);
         if (!MimeTypes.OCTET_STREAM.equals(mimeType) && !expectedMimeType.equals(mimeType)) {
-            throw new InvalidDocumentFormatException("The file is not a valid, expected MIME type: " + expectedMimeType + ". Detected MIME type: " + mimeType);
+            throw new InvalidContentFormatException("The file is not a valid, expected MIME type: " + expectedMimeType + ". Detected MIME type: " + mimeType);
         }
     }
 

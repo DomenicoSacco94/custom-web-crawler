@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.crawler.domains.scanner.processors.DocumentPatternProcessor.CHAR_WINDOW_LENGTH;
+import static com.crawler.domains.regexp.RegexpService.CHAR_WINDOW_LENGTH;
 
 @Service
 @AllArgsConstructor

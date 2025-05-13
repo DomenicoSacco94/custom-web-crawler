@@ -1,6 +1,7 @@
 package com.crawler.utils;
 
-import com.crawler.utils.models.ExceptionResponse;
+import com.crawler.utils.exceptions.ExceptionUtils;
+import com.crawler.utils.exceptions.models.ExceptionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

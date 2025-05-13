@@ -1,6 +1,6 @@
 package com.crawler.domains.topics.models;
 
-import com.crawler.domains.occurrences.regexp.models.Regexp;
+import com.crawler.domains.regexp.models.Regexp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

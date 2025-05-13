@@ -26,7 +26,7 @@ public class OllamaConfig {
     public OllamaChatModel ollamaChatModel(OllamaApi ollamaApi) {
         return OllamaChatModel.builder()
                 .ollamaApi(ollamaApi)
-                .defaultOptions(OllamaOptions.builder().model(OllamaModel.LLAMA3_2).build())
+                .defaultOptions(OllamaOptions.builder().model(OllamaModel.ORCA_MINI).build())
                 .modelManagementOptions(ModelManagementOptions.builder()
                         .pullModelStrategy(PullModelStrategy.WHEN_MISSING)
                         .build())

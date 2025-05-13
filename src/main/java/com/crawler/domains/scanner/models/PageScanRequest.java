@@ -1,6 +1,5 @@
-package com.crawler.domains.occurrences.models;
+package com.crawler.domains.scanner.models;
 
-import com.crawler.domains.regexp.models.RegexpDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OccurrenceDTO {
-    private Long id;
-    private RegexpDTO regexpDTO;
-    private String surroundingText;
+public class PageScanRequest {
     private String url;
+    private Long topicId;
 }

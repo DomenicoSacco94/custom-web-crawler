@@ -27,14 +27,14 @@ public class FactServiceImpl implements FactService {
 
     public static final int SYNTHESIS_FIRST_FACTOR = 5;
 
-    private String hydrateFactPrompt(String template, String description, String text, String charLimit) {
+    public String hydrateFactPrompt(String template, String description, String text, String charLimit) {
         return template
                 .replace("{description}", description)
                 .replace("{text}", text)
                 .replace("{char_limit}", charLimit);
     }
 
-    private String loadFactPromptTemplate(String factPromptFilePath) throws IOException {
+    public String loadFactPromptTemplate(String factPromptFilePath) throws IOException {
         ClassPathResource resource = new ClassPathResource(factPromptFilePath);
         return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
     }

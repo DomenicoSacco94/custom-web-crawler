@@ -31,7 +31,7 @@ public class ScannerServiceImpl implements ScannerService {
     public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
     private static final int FETCH_RATE_MILLISECONDS = 200;
     private static final int THREAD_POOL_SIZE = 5;
-    private static final int CRAWLER_MAX_DEPTH = 2;
+    public static final int CRAWLER_MAX_DEPTH = 2;
     private final OccurrenceMapper occurrenceMapper;
     private final RegexpService regexpService;
     private final TopicService topicService;

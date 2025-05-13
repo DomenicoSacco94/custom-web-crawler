@@ -65,7 +65,7 @@ public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
     @Test
     void testDocumentScanWithPattern() {
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
-        PageScanRequest request = new PageScanRequest(fileUrl, 1L);
+        PageScanRequest request = new PageScanRequest(fileUrl, 1L, 0);
 
         var response = restTemplate.postForEntity("/v1/document/scan/url", request, OccurrenceDTO[].class);
 

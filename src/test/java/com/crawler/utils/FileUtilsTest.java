@@ -1,6 +1,5 @@
 package com.crawler.utils;
 
-import org.apache.tika.Tika;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +19,7 @@ public class FileUtilsTest {
 
     @BeforeEach
     public void setUp() {
-        Tika tika = new Tika();
-        fileUtils = new FileUtils(tika);
+        fileUtils = new FileUtils();
     }
 
     @Test

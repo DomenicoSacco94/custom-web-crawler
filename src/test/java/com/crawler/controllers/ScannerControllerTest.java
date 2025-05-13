@@ -1,7 +1,7 @@
 package com.crawler.controllers;
 
 import com.crawler.domains.scanner.ScannerController;
-import com.crawler.domains.scanner.ScannerService;
+import com.crawler.domains.scanner.ScannerServiceImpl;
 import com.crawler.domains.scanner.models.BulkPageScanRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class ScannerControllerTest {
 
     @Mock
-    private ScannerService scannerService;
+    private ScannerServiceImpl scannerServiceImpl;
 
     @InjectMocks
     private ScannerController scannerController;
@@ -33,7 +33,7 @@ class ScannerControllerTest {
     @Test
     void testScanDocuments() {
         BulkPageScanRequest request = new BulkPageScanRequest(List.of("http://example.com/document1.pdf", "http://example.com/document2.pdf"), 1L);
-        doNothing().when(scannerService).scanBulkDocuments(any(BulkPageScanRequest.class));
+        doNothing().when(scannerServiceImpl).scanBulkDocuments(any(BulkPageScanRequest.class));
 
         ResponseEntity<Void> response = scannerController.scanUrls(request);
 

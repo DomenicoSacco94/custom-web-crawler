@@ -2,7 +2,7 @@ package com.crawler.services;
 
 import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import com.crawler.utils.DownloadUtils;
-import com.crawler.domains.scanner.ScannerService;
+import com.crawler.domains.scanner.ScannerServiceImpl;
 import com.crawler.domains.scanner.exceptions.ScanException;
 import com.crawler.domains.scanner.models.PageScanRequest;
 import com.crawler.domains.regexp.RegexpService;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ScannerServiceTest {
+public class ScannerServiceImplTest {
 
     @Mock
     private DownloadUtils downloadUtils;
@@ -28,7 +28,7 @@ public class ScannerServiceTest {
     private RegexpService patternProcessor;
 
     @InjectMocks
-    private ScannerService scannerService;
+    private ScannerServiceImpl scannerServiceImpl;
 
     @Test
     public void testScanPdfDocument() throws IOException {
@@ -40,7 +40,7 @@ public class ScannerServiceTest {
         when(patternProcessor.detectPatterns(pdfText, topicId, pdfUrl)).thenReturn(List.of(new OccurrenceDTO()));
 
         PageScanRequest request = new PageScanRequest(pdfUrl, topicId);
-        List<OccurrenceDTO> occurrences = scannerService.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
 
         assertNotNull(occurrences);
         assertFalse(occurrences.isEmpty());
@@ -56,7 +56,7 @@ public class ScannerServiceTest {
         when(patternProcessor.detectPatterns(htmlText, topicId, htmlUrl)).thenReturn(List.of(new OccurrenceDTO()));
 
         PageScanRequest request = new PageScanRequest(htmlUrl, topicId);
-        List<OccurrenceDTO> occurrences = scannerService.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
 
         assertNotNull(occurrences);
         assertFalse(occurrences.isEmpty());
@@ -71,6 +71,6 @@ public class ScannerServiceTest {
 
         PageScanRequest request = new PageScanRequest(invalidUrl, topicId);
 
-        assertThrows(ScanException.class, () -> scannerService.onDocumentScanRequest(request));
+        assertThrows(ScanException.class, () -> scannerServiceImpl.onDocumentScanRequest(request));
     }
 }

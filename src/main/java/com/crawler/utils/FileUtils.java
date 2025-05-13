@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.tika.Tika;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class FileUtils {
 
-    private final Tika tika;
     private final int BUFFER_SIZE = 1024;
 
     public byte[] readInputStreamInChunks(InputStream inputStream) throws IOException {

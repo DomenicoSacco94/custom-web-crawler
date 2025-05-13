@@ -34,13 +34,13 @@ public class PageCrawlerUtils {
                 .collect(Collectors.toSet());
     }
 
-    private Set<String> extractLinks(Elements elements, Set<String> analyzedLinks) {
+    public Set<String> extractLinks(Elements elements, Set<String> analyzedLinks) {
         Set<String> links = new HashSet<>();
         for (Element element : elements) {
             String link = element.attr("abs:href");
 
             // Check if the link is already analyzed
-            if (!analyzedLinks.contains(link)) {
+            if (!analyzedLinks.contains(link) && !link.isEmpty()) {
                 links.add(link);
                 if (links.size() >= MAX_LINKS_PER_DOCUMENT) {
                     return links;

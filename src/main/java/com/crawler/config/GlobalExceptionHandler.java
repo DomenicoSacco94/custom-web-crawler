@@ -3,6 +3,7 @@ package com.crawler.config;
 import com.crawler.domains.scanner.exceptions.ScanException;
 import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
 import com.crawler.domains.scanner.exceptions.InvalidUrlException;
+import com.crawler.domains.scanner.exceptions.TopicNotFoundException;
 import com.crawler.utils.exceptions.models.ExceptionResponse;
 import com.crawler.utils.exceptions.ExceptionUtils;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -36,6 +37,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleInvalidUrlException(InvalidUrlException ex) {
         return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(TopicNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleTopicNotFoundException(TopicNotFoundException ex) {
+        return exceptionUtils.handleScannerException(ex, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException ex) {

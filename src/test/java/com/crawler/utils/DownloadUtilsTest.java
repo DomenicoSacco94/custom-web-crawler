@@ -1,8 +1,6 @@
-package com.crawler.services;
+package com.crawler.utils;
 
-import com.crawler.utils.DownloadUtils;
 import com.crawler.domains.scanner.exceptions.InvalidUrlException;
-import com.crawler.utils.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;

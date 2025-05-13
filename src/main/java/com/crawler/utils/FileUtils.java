@@ -1,12 +1,10 @@
 package com.crawler.utils;
 
-import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.tika.Tika;
-import org.apache.tika.mime.MimeTypes;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -31,15 +29,7 @@ public class FileUtils {
         }
     }
 
-    public void validateFileType(byte[] fileBytes, String expectedMimeType) {
-        String mimeType = tika.detect(fileBytes);
-        if (!MimeTypes.OCTET_STREAM.equals(mimeType) && !expectedMimeType.equals(mimeType)) {
-            throw new InvalidContentFormatException("The file is not a valid, expected MIME type: " + expectedMimeType + ". Detected MIME type: " + mimeType);
-        }
-    }
-
     public String extractTextFromPdf(byte[] pdfBytes) throws IOException {
-        validateFileType(pdfBytes, "application/pdf");
         try (PDDocument document = Loader.loadPDF(pdfBytes)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             return pdfStripper.getText(document);

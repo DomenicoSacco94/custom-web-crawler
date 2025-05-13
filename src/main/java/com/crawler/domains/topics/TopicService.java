@@ -2,6 +2,7 @@ package com.crawler.domains.topics;
 
 import com.crawler.domains.regexp.RegexpRepository;
 import com.crawler.domains.regexp.models.Regexp;
+import com.crawler.domains.scanner.exceptions.TopicNotFoundException;
 import com.crawler.domains.topics.models.Topic;
 import com.crawler.domains.topics.models.TopicDTO;
 import com.crawler.domains.topics.models.mappers.TopicMapper;
@@ -16,6 +17,13 @@ public class TopicService {
     private final TopicRepository topicRepository;
     private final RegexpRepository regexpRepository;
     private final TopicMapper topicMapper;
+
+    @Transactional(readOnly = true)
+    public TopicDTO findTopicById(Long topicId) {
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new TopicNotFoundException("Topic not found for ID: " + topicId));
+        return topicMapper.toDto(topic);
+    }
 
     @Transactional
     public TopicDTO createTopic(TopicDTO topicDTO) {

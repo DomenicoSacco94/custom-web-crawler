@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import javax.validation.Valid;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/v1")
@@ -17,7 +19,7 @@ public class ScannerController {
 
     @Operation(summary = "Scan the content from multiple URLs")
     @PostMapping("/scan")
-    public ResponseEntity<Void> scanUrls(@RequestBody BulkPageScanRequest request) {
+    public ResponseEntity<Void> scanUrls(@Valid @RequestBody BulkPageScanRequest request) {
         scannerService.scanBulkDocuments(request);
         return ResponseEntity.ok().build();
     }

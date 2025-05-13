@@ -1,6 +1,5 @@
 package com.crawler.utils;
 
-import com.crawler.domains.scanner.exceptions.InvalidContentFormatException;
 import org.apache.tika.Tika;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class FileUtilsTest {
@@ -46,20 +44,11 @@ public class FileUtilsTest {
     }
 
     @Test
-    public void testValidateFileTypeWithInvalidMimeType() throws Exception {
-        Path invalidFilePath = Paths.get("src/test/resources/testfiles/test_png.png");
-        byte[] invalidFileContent = Files.readAllBytes(invalidFilePath);
-
-        assertThrows(InvalidContentFormatException.class, () ->
-            fileUtils.validateFileType(invalidFileContent, "application/pdf"));
-    }
-
-    @Test
     public void testValidateFileTypeWithValidMimeType() throws Exception {
         Path validFilePath = Paths.get("src/test/resources/testfiles/Testdata_Invoices.pdf");
         byte[] validFileContent = Files.readAllBytes(validFilePath);
 
         assertDoesNotThrow(() ->
-            fileUtils.validateFileType(validFileContent, "application/pdf"));
+            fileUtils.extractTextFromPdf(validFileContent));
     }
 }

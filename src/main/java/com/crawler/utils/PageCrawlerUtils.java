@@ -10,34 +10,43 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class PageCrawlerUtils {
 
-    private static final int MAX_LINKS = 20;
+    private static final int MAX_LINKS_PER_DOCUMENT = 5;
 
     public Set<String> extractLinksFromPage(String url, Set<String> analyzedLinks) throws IOException {
-        Set<String> newLinks = new HashSet<>();
         Document document = Jsoup.connect(url).get();
 
-        // Select meaningful sections (e.g., main content)
-        Elements meaningfulSections = document.select("main, article, section");
+        // Extract links from meaningful sections
+        Set<String> newLinks = new HashSet<>(extractLinks(document.select("main, article, section"), analyzedLinks));
 
-        for (Element section : meaningfulSections) {
-            Elements anchorTags = section.select("a[href]");
-            for (Element anchor : anchorTags) {
-                String link = anchor.attr("abs:href");
+        // Fallback: Extract links from the entire document if needed
+        if (newLinks.size() < MAX_LINKS_PER_DOCUMENT) {
+            newLinks.addAll(extractLinks(document.select("a[href]"), analyzedLinks));
+        }
 
-                // Check if the link is already analyzed
-                if (!analyzedLinks.contains(link)) {
-                    newLinks.add(link);
-                    if (newLinks.size() >= MAX_LINKS) {
-                        return newLinks;
-                    }
+        return newLinks.stream()
+                .limit(MAX_LINKS_PER_DOCUMENT)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<String> extractLinks(Elements elements, Set<String> analyzedLinks) {
+        Set<String> links = new HashSet<>();
+        for (Element element : elements) {
+            String link = element.attr("abs:href");
+
+            // Check if the link is already analyzed
+            if (!analyzedLinks.contains(link)) {
+                links.add(link);
+                if (links.size() >= MAX_LINKS_PER_DOCUMENT) {
+                    return links;
                 }
             }
         }
-        return newLinks;
+        return links;
     }
 }

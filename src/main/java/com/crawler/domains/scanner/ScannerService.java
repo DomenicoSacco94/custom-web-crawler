@@ -7,6 +7,7 @@ package com.crawler.domains.scanner;
     import com.crawler.domains.scanner.models.BulkPageScanRequest;
     import com.crawler.domains.regexp.RegexpService;
     import com.crawler.domains.occurrences.models.OccurrenceDTO;
+    import com.crawler.domains.topics.TopicService;
     import com.crawler.utils.DownloadUtils;
     import com.crawler.utils.PageCrawlerUtils;
     import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ package com.crawler.domains.scanner;
 
         private final OccurrenceMapper occurrenceMapper;
         private final RegexpService patternValidator;
+        private final TopicService topicService;
         private final DownloadUtils downloadUtils;
         private final OccurrenceService occurrenceService;
         private final KafkaTemplate<String, PageScanRequest> kafkaTemplate;
@@ -73,6 +75,7 @@ package com.crawler.domains.scanner;
         public void scanBulkDocuments(BulkPageScanRequest request) {
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
             Long topicId = request.getTopicId();
+            topicService.findTopicById(topicId);
             List<String> urls = request.getUrls();
             for (int i = 0; i < urls.size(); i++) {
                 final String url = urls.get(i);

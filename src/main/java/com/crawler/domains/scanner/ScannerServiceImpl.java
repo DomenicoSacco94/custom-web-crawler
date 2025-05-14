@@ -16,9 +16,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +39,7 @@ public class ScannerServiceImpl implements ScannerService {
     private final OccurrenceService occurrenceService;
     private final KafkaTemplate<String, PageScanRequest> kafkaTemplate;
     private final PageCrawlerUtils pageCrawlerUtils;
-    private final Set<String> scannedLinks = new HashSet<>();
+    private final Set<String> scannedLinks = new ConcurrentSkipListSet<>();
 
     @Override
     public List<OccurrenceDTO> onScanRequest(PageScanRequest request) {
@@ -63,8 +63,11 @@ public class ScannerServiceImpl implements ScannerService {
 
             List<OccurrenceDTO> occurrences = regexpService.detectPatterns(textContent, topicId, documentUrl);
 
+            List<OccurrenceDTO> savedOccurrences = occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
+            savedOccurrences.forEach(occurrenceService::onOccurrence);
             scannedLinks.add(documentUrl);
 
+            //extract and send to download queue the links inside the page
             Set<String> newLinks = pageCrawlerUtils.extractLinksFromPage(documentUrl, scannedLinks);
 
             for (String newLink : newLinks) {
@@ -72,10 +75,8 @@ public class ScannerServiceImpl implements ScannerService {
                 kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, new PageScanRequest(newLink, topicId, currentDepth + 1));
             }
 
-            List<OccurrenceDTO> savedOccurrences = occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
-            savedOccurrences.forEach(occurrenceService::onOccurrence);
-
             return savedOccurrences;
+
         } catch (IOException e) {
             throw new ScanException("Failed to process the document from: " + request.getUrl(), e);
         }

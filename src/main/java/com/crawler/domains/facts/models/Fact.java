@@ -20,9 +20,9 @@ public class Fact {
     @JoinColumn(name = "occurrence_id", nullable = false)
     private Occurrence occurrence;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String inferredText;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String consequences;
 }

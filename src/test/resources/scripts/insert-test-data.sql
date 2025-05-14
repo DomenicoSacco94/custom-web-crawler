@@ -6,5 +6,5 @@ INSERT INTO regexps (topic_id, pattern, description)
 VALUES (
            (SELECT id FROM topics WHERE name = 'Bezirksstelle Lüneburg'),
            '(?i)Bezirksstelle\sLüneburg',
-           'Case-insensitive regexp for Bezirksstelle Lüneburg'
+           'Lüneburg District Office'
        );

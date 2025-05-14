@@ -42,7 +42,7 @@ public class ScannerServiceImpl implements ScannerService {
     private final Set<String> scannedLinks = new HashSet<>();
 
     @Override
-    public List<OccurrenceDTO> onDocumentScanRequest(PageScanRequest request) {
+    public List<OccurrenceDTO> onScanRequest(PageScanRequest request) {
         try {
             String documentUrl = request.getUrl();
             Long topicId = request.getTopicId();

@@ -7,6 +7,6 @@ import com.crawler.domains.occurrences.models.OccurrenceDTO;
 import java.util.List;
 
 public interface ScannerService {
-    List<OccurrenceDTO> onDocumentScanRequest(PageScanRequest request);
+    List<OccurrenceDTO> onScanRequest(PageScanRequest request);
     void scanBulkDocuments(BulkPageScanRequest request);
 }

@@ -31,7 +31,7 @@ import java.nio.file.Files;
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 @Sql(scripts = "/scripts/insert-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/scripts/cleanup-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class DocumentScannerIntegrationTest extends AbstractIntegrationTest {
+public class ScannerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

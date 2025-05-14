@@ -62,7 +62,7 @@ public class ScannerServiceImplTest {
         when(occurrenceService.saveAll(any())).thenReturn(List.of());
 
         PageScanRequest request = new PageScanRequest(pdfUrl, topicId, 0);
-        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onScanRequest(request);
 
         assertNotNull(occurrences);
         verify(downloadUtils, times(1)).downloadAndExtractText(pdfUrl);
@@ -88,7 +88,7 @@ public class ScannerServiceImplTest {
         when(occurrenceService.saveAll(any())).thenReturn(List.of());
 
         PageScanRequest request = new PageScanRequest(htmlUrl, topicId, 0);
-        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onScanRequest(request);
 
         assertNotNull(occurrences);
         verify(downloadUtils, times(1)).downloadAndExtractText(htmlUrl);
@@ -99,7 +99,7 @@ public class ScannerServiceImplTest {
     }
 
     @Test
-    public void testOnDocumentScanRequestThrowsException() throws IOException {
+    public void testOnScanRequestThrowsException() throws IOException {
         String invalidUrl = "http://example.com/invalid_document.pdf";
         Long topicId = 1L;
 
@@ -107,7 +107,7 @@ public class ScannerServiceImplTest {
 
         PageScanRequest request = new PageScanRequest(invalidUrl, topicId, 0);
 
-        assertThrows(ScanException.class, () -> scannerServiceImpl.onDocumentScanRequest(request));
+        assertThrows(ScanException.class, () -> scannerServiceImpl.onScanRequest(request));
         verify(downloadUtils, times(1)).downloadAndExtractText(invalidUrl);
         verifyNoInteractions(regexpService, pageCrawlerUtils, kafkaTemplate);
     }
@@ -119,7 +119,7 @@ public class ScannerServiceImplTest {
 
         PageScanRequest request = new PageScanRequest(url, topicId, CRAWLER_MAX_DEPTH);
 
-        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onScanRequest(request);
 
         assertNotNull(occurrences);
         assertTrue(occurrences.isEmpty());
@@ -131,10 +131,10 @@ public class ScannerServiceImplTest {
         Long topicId = 1L;
 
         // Simulate the URL being already scanned
-        scannerServiceImpl.onDocumentScanRequest(new PageScanRequest(url, topicId, 0));
+        scannerServiceImpl.onScanRequest(new PageScanRequest(url, topicId, 0));
 
         PageScanRequest request = new PageScanRequest(url, topicId, 1);
-        List<OccurrenceDTO> occurrences = scannerServiceImpl.onDocumentScanRequest(request);
+        List<OccurrenceDTO> occurrences = scannerServiceImpl.onScanRequest(request);
 
         assertNotNull(occurrences);
         assertTrue(occurrences.isEmpty());

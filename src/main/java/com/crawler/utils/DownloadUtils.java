@@ -32,7 +32,7 @@ public class DownloadUtils {
             throw new InvalidUrlException("Invalid URL: " + fileUrl);
         }
 
-        log.info("Downloading document from: {}", fileUrl);
+        log.info("Downloading: {}", fileUrl);
 
         URL url = new URL(fileUrl);
         URLConnection connection = url.openConnection();

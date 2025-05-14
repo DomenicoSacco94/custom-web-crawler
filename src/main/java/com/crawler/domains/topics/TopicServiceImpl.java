@@ -29,17 +29,16 @@ public class TopicServiceImpl implements TopicService {
     public TopicDTO createTopic(TopicDTO topicDTO) {
         final Topic topic = topicMapper.toEntity(topicDTO);
 
+        // create the topic first
         Topic savedTopic = topicRepository.save(topic);
 
-        if (topic.getRegexps() != null) {
-            for (Regexp regexp : topic.getRegexps()) {
-                regexp.setTopicId(savedTopic.getId());
-                regexpRepository.save(regexp);
-            }
+        // create the regexps referencing to it
+        for (Regexp regexp : topic.getRegexps()) {
+            regexp.setTopicId(savedTopic.getId());
+            regexpRepository.save(regexp);
         }
 
         savedTopic.setRegexps(topic.getRegexps());
-        topicRepository.save(savedTopic);
 
         return topicMapper.toDto(savedTopic);
     }

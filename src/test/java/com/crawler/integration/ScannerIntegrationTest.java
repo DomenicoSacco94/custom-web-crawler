@@ -1,33 +1,37 @@
 package com.crawler.integration;
 
-import com.crawler.domains.occurrences.models.OccurrenceDTO;
+import com.crawler.domains.facts.models.FactDTO;
+import com.crawler.domains.scanner.models.BulkPageScanRequest;
 import com.crawler.integration.config.AbstractIntegrationTest;
-import com.crawler.domains.scanner.models.PageScanRequest;
-import com.crawler.utils.TestKafkaConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = {TestKafkaConfig.class})
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 @Sql(scripts = "/scripts/insert-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/scripts/cleanup-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -37,10 +41,6 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
     private TestRestTemplate restTemplate;
 
     private MockWebServer mockWebServer;
-
-    @Autowired
-    @Qualifier("testKafkaTemplate")
-    private KafkaTemplate<String, OccurrenceDTO> occurrenceKafkaTemplate;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -65,15 +65,34 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
     @Test
     void testDocumentScanWithPattern() {
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
-        PageScanRequest request = new PageScanRequest(fileUrl, 1L, 0);
+        BulkPageScanRequest request = new BulkPageScanRequest(List.of(fileUrl), 1L);
 
-        var response = restTemplate.postForEntity("/v1/document/scan/url", request, OccurrenceDTO[].class);
+        var response = restTemplate.postForEntity("/v1/scan", request, Void.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        OccurrenceDTO[] occurrences = response.getBody();
-        Assertions.assertNotNull(occurrences);
-        Assertions.assertEquals(1, occurrences.length);
 
-        Assertions.assertNotNull(occurrences[0].getSurroundingText());
+        Awaitility.await()
+                .atMost(2, TimeUnit.MINUTES)
+                .pollInterval(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    ResponseEntity<List<FactDTO>> factsResponse = restTemplate.exchange(
+                            "/v1/facts",
+                            HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<List<FactDTO>>() {}
+                    );
+
+                    assertEquals(HttpStatus.OK, factsResponse.getStatusCode());
+                    assertNotNull(factsResponse.getBody());
+                    assertTrue(factsResponse.getBody().size() > 0);
+
+                    // Ensure at least one FactDTO has non-empty attributes
+                    boolean hasNonEmptyFact =
+                            factsResponse.getBody().stream()
+                                    .filter(Objects::nonNull)
+                                    .anyMatch(fact -> !fact.getInferredText().isEmpty() && !fact.getConsequences().isEmpty());
+
+                    assertTrue(hasNonEmptyFact, "No FactDTO with non-empty attributes found.");
+                });
     }
 }

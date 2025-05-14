@@ -72,7 +72,10 @@ public class ScannerServiceImpl implements ScannerService {
                 kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, new PageScanRequest(newLink, topicId, currentDepth + 1));
             }
 
-            return occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
+            List<OccurrenceDTO> savedOccurrences = occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
+            savedOccurrences.forEach(occurrenceService::onOccurrence);
+
+            return savedOccurrences;
         } catch (IOException e) {
             throw new ScanException("Failed to process the document from: " + request.getUrl(), e);
         }

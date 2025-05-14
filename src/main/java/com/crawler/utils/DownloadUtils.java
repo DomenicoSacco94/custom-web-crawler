@@ -23,7 +23,7 @@ public class DownloadUtils {
     private static final Pattern URL_PATTERN = Pattern.compile(
             "^(https?|ftp)://[\\w.-]+(:\\d+)?(/.*)?$", Pattern.CASE_INSENSITIVE);
 
-    private static final List<String> supportedContentTypes = List.of("html", "pdf", "xml");
+    private static final List<String> supportedContentTypes = List.of("html", "pdf", "xml", "binary");
 
     private final FileUtils fileUtils;
 

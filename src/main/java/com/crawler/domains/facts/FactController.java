@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/facts")
+@RequestMapping("/v1")
 @AllArgsConstructor
 public class FactController {
 
     private final FactService factService;
 
-    @GetMapping
+    @GetMapping("/facts")
     public List<FactDTO> getFacts() {
         return factService.getAllFacts();
     }

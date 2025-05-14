@@ -1,1 +1,4 @@
-DELETE FROM regexps where pattern = 'DE15\s3006\s0601\s0505\s7807\s80';
+DELETE FROM regexps;
+DELETE FROM topics;
+DELETE FROM facts;
+DELETE FROM occurrences;

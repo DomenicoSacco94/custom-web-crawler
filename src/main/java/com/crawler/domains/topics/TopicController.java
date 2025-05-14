@@ -6,13 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/topics")
+@RequestMapping("/v1")
 @AllArgsConstructor
 public class TopicController {
 
     private final TopicService topicService;
 
-    @PostMapping
+    @PostMapping("/topics")
     public ResponseEntity<TopicDTO> createTopic(@RequestBody TopicDTO topicDTO) {
         TopicDTO createdTopic = topicService.createTopic(topicDTO);
         return ResponseEntity.ok(createdTopic);

@@ -83,7 +83,7 @@ class TopicServiceTest {
 
         assertNotNull(result);
         verify(topicMapper, times(1)).toEntity(topicDTO);
-        verify(topicRepository, times(2)).save(any(Topic.class));
+        verify(topicRepository, times(1)).save(any(Topic.class));
         verify(regexpRepository, times(1)).save(any(Regexp.class));
         verify(topicMapper, times(1)).toDto(topic);
     }

@@ -2,6 +2,7 @@ package com.crawler.integration.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
 @Slf4j
+@DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
 public abstract class AbstractIntegrationTest {
@@ -40,6 +42,7 @@ public abstract class AbstractIntegrationTest {
 
         kafkaContainer.start();
         log.info("Kafka container started on bootstrap servers: {}", kafkaContainer.getBootstrapServers());
+
     }
 
     @DynamicPropertySource

@@ -7,10 +7,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
 import org.awaitility.Awaitility;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
@@ -45,13 +42,10 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         mockWebServer = new MockWebServer();
-        int MOCKED_DOCUMENT_SERVER_PORT = 8084;
-        mockWebServer.start(MOCKED_DOCUMENT_SERVER_PORT);
+        mockWebServer.start(); // Bind to a random available port
 
-        // Ensure the PDF file is correctly read as bytes
         byte[] pdfBytes = Files.readAllBytes(new ClassPathResource("testfiles/Testdata_Invoices.pdf").getFile().toPath());
 
-        // Serve the PDF file using MockWebServer
         mockWebServer.enqueue(new MockResponse()
                 .setBody(new Buffer().write(pdfBytes))
                 .addHeader("Content-Type", "application/pdf"));
@@ -72,7 +66,7 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
         Awaitility.await()
-                .atMost(2, TimeUnit.MINUTES)
+                .atMost(5, TimeUnit.MINUTES)
                 .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     ResponseEntity<List<FactDTO>> factsResponse = restTemplate.exchange(

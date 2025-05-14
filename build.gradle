@@ -131,3 +131,7 @@ jacocoTestReport {
         )
     }
 }
+
+test {
+    maxParallelForks = 1
+}

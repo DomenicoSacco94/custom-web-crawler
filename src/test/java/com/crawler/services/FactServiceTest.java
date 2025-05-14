@@ -96,4 +96,33 @@ class FactServiceTest {
         verify(ollamaChatModel, times(1)).call(hydratedFactPrompt);
         verify(ollamaChatModel, times(1)).call(hydratedConsequencesPrompt);
     }
+
+    @Test
+    void testHydrateFactPrompt() {
+        String template = "Given the following text about {description}: {text}, limit to {char_limit} characters.";
+        String description = "economy";
+        String text = "This is a sample text.";
+        String charLimit = "100";
+
+        String expected = "Given the following text about economy: This is a sample text., limit to 100 characters.";
+        String result = factService.hydrateFactPrompt(template, description, text, charLimit);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testLoadFactPromptTemplate() throws IOException {
+        // Mock the file content
+        String expectedContent = "Mocked file content";
+        String filePath = "prompts/prompt_extract_fact.txt";
+
+        // Use a spy to mock the behavior of loadFactPromptTemplate
+        FactServiceImpl spyFactService = spy(factService);
+        doReturn(expectedContent).when(spyFactService).loadFactPromptTemplate(filePath);
+
+        String result = spyFactService.loadFactPromptTemplate(filePath);
+
+        assertEquals(expectedContent, result);
+        verify(spyFactService, times(1)).loadFactPromptTemplate(filePath);
+    }
 }

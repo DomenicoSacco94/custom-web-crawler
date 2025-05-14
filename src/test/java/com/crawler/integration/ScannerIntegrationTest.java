@@ -18,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 @Sql(scripts = "/scripts/insert-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -73,12 +75,13 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
                             "/v1/facts",
                             HttpMethod.GET,
                             null,
-                            new ParameterizedTypeReference<List<FactDTO>>() {}
+                            new ParameterizedTypeReference<>() {
+                            }
                     );
 
                     assertEquals(HttpStatus.OK, factsResponse.getStatusCode());
                     assertNotNull(factsResponse.getBody());
-                    assertTrue(factsResponse.getBody().size() > 0);
+                    assertTrue(!factsResponse.getBody().isEmpty());
 
                     // Ensure at least one FactDTO has non-empty attributes
                     boolean hasNonEmptyFact =

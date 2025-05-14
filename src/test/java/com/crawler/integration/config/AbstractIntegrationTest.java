@@ -17,6 +17,10 @@ import org.junit.jupiter.api.BeforeAll;
 @ActiveProfiles("integration-test")
 public abstract class AbstractIntegrationTest {
 
+    static {
+        System.setProperty("testcontainers.reuse.enable", "false");
+    }
+
     @Container
     public static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:latest");
 

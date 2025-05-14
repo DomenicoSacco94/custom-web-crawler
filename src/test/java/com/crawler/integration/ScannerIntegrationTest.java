@@ -68,7 +68,7 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
         Awaitility.await()
-                .atMost(5, TimeUnit.MINUTES)
+                .atMost(2, TimeUnit.MINUTES)
                 .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     ResponseEntity<List<FactDTO>> factsResponse = restTemplate.exchange(
@@ -81,7 +81,7 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
 
                     assertEquals(HttpStatus.OK, factsResponse.getStatusCode());
                     assertNotNull(factsResponse.getBody());
-                    assertTrue(!factsResponse.getBody().isEmpty());
+                    assertFalse(factsResponse.getBody().isEmpty());
 
                     // Ensure at least one FactDTO has non-empty attributes
                     boolean hasNonEmptyFact =

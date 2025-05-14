@@ -6,6 +6,7 @@ import com.crawler.integration.config.AbstractIntegrationTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
+import org.apache.kafka.clients.admin.AdminClient;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +62,18 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void testDocumentScanWithPattern() {
+
+        // Wait for Kafka to be ready
+        Awaitility.await()
+                .atMost(2, TimeUnit.MINUTES)
+                .pollInterval(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    try (var adminClient = AdminClient.create(Map.of("bootstrap.servers", kafkaContainer.getBootstrapServers()))) {
+                        var clusterDescription = adminClient.describeCluster().clusterId().get();
+                        assertNotNull(clusterDescription, "Kafka cluster is not ready.");
+                    }
+                });
+
         String fileUrl = mockWebServer.url("/testfiles/Testdata_Invoices.pdf").toString();
         BulkPageScanRequest request = new BulkPageScanRequest(List.of(fileUrl), 1L);
 

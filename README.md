@@ -62,16 +62,18 @@ Then we can trigger the scan of the corresponding news Feed endpoint:
 {
     "topicId": 1,
     "urls": [
-        "http://news.google.com/rss/search?q=sector%20name&hl=en&gl=US&ceid=US:en"
+        "http://news.website.com/sectorname"
     ]
 }
 ```
 
 The DB will then start getting filled of facts about the chosen industry sector, which are accessible through the endpoint **GET /v1/facts**.
 
-DISCLAIMER: Depending on the Ollama model used, the results might be false, irrelevant and/or hallucinated.
+**DISCLAIMER**: Depending on the Ollama model used, the results might be false, irrelevant and/or hallucinated.
 There is also the strong tendency to the extrapolated facts being duplicated. 
-An improvement of this crawler would be to re-use the LLM on the result collection itself and remove the duplicated facts, compiling a holistic report.
+
+An improvement of this crawler could be to re-use the LLMs on the fact collection itself to compile a holistic report, without duplications.
+Different LLMs models can be also combined for different applications, for instance using a quicker (but less effective) AI to extrapolate the single facts and then a "smarter" (but slower one) to compile a report.
 
 ## Running tests locally
 The tests can be run using the Gradle wrapper:

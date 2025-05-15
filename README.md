@@ -43,7 +43,6 @@ The script will serve all the files in the `src/test/resources/testfiles` path a
     "urls": [
         "http://192.168.2.105:34000/test_png.png",
         "http://192.168.2.105:34000/Testdata_Invoices.pdf",
-        "http://192.168.2.105:34000/Testdata_no_ibans.pdf"
     ]
 }
 ```

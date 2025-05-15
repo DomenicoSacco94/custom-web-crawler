@@ -112,7 +112,7 @@ public class ScannerServiceImplTest {
     }
 
     @Test
-    public void testScanDocumentWithMaxDepthReached() {
+    public void testScanWithMaxDepthReached() {
         String url = "http://example.com/document.pdf";
         Long topicId = 1L;
 
@@ -125,7 +125,7 @@ public class ScannerServiceImplTest {
     }
 
     @Test
-    public void testScanDocumentAlreadyScanned() {
+    public void testScanPageAlreadyScanned() {
         String url = "http://example.com/document.pdf";
         Long topicId = 1L;
 

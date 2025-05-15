@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ScannerServiceImpl implements ScannerService {
 
-    public static final String KAFKA_DOCUMENT_SCAN_TOPIC = "document-scan-topic";
+    public static final String KAFKA_PAGE_SCAN_TOPIC = "page-scan-topic";
     private static final int FETCH_RATE_MILLISECONDS = 200;
     private static final int THREAD_POOL_SIZE = 5;
     public static final int CRAWLER_MAX_DEPTH = 2;
@@ -44,44 +44,44 @@ public class ScannerServiceImpl implements ScannerService {
     @Override
     public List<OccurrenceDTO> onScanRequest(PageScanRequest request) {
         try {
-            String documentUrl = request.getUrl();
+            String pageUrl = request.getUrl();
             Long topicId = request.getTopicId();
             int currentDepth = request.getDepth();
 
-            if (scannedLinks.contains(documentUrl)) {
-                log.info("URL already analyzed: {}", documentUrl);
+            if (scannedLinks.contains(pageUrl)) {
+                log.info("URL already analyzed: {}", pageUrl);
                 return List.of();
             }
 
             if (currentDepth > CRAWLER_MAX_DEPTH) {
-                log.info("Maximum depth reached for URL: {}", documentUrl);
+                log.info("Maximum depth reached for URL: {}", pageUrl);
                 return List.of();
             }
 
-            log.info("Analyzing document URL: {} at depth {}", documentUrl, currentDepth);
-            String textContent = downloadUtils.downloadAndExtractText(documentUrl);
+            log.info("Analyzing page URL: {} at depth {}", pageUrl, currentDepth);
+            String textContent = downloadUtils.downloadAndExtractText(pageUrl);
 
-            List<OccurrenceDTO> occurrences = regexpService.detectPatterns(textContent, topicId, documentUrl);
+            List<OccurrenceDTO> occurrences = regexpService.detectPatterns(textContent, topicId, pageUrl);
 
             List<OccurrenceDTO> savedOccurrences = occurrenceService.saveAll(occurrences).stream().map(occurrenceMapper::toDto).toList();
             savedOccurrences.forEach(occurrenceService::onOccurrence);
-            scannedLinks.add(documentUrl);
+            scannedLinks.add(pageUrl);
 
-            Set<String> newLinks = pageCrawlerUtils.extractLinksFromPage(documentUrl, scannedLinks);
+            Set<String> newLinks = pageCrawlerUtils.extractLinksFromPage(pageUrl, scannedLinks);
 
             for (String newLink : newLinks) {
                 log.info("Sending Kafka message for link: {} at depth {}", newLink, currentDepth + 1);
-                kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, new PageScanRequest(newLink, topicId, currentDepth + 1));
+                kafkaTemplate.send(KAFKA_PAGE_SCAN_TOPIC, new PageScanRequest(newLink, topicId, currentDepth + 1));
             }
 
             return savedOccurrences;
 
         } catch (IOException e) {
-            throw new ScanException("Failed to process the document from: " + request.getUrl(), e);
+            throw new ScanException("Failed to process the web page at: " + request.getUrl(), e);
         }
     }
 
-    public void scanBulkDocuments(BulkPageScanRequest request) {
+    public void scanBulkPages(BulkPageScanRequest request) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
         Long topicId = request.getTopicId();
         topicService.findTopicById(topicId);
@@ -89,7 +89,7 @@ public class ScannerServiceImpl implements ScannerService {
         for (int i = 0; i < urls.size(); i++) {
             final String url = urls.get(i);
             PageScanRequest pageScanRequest = new PageScanRequest(url, topicId, 0);
-            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_DOCUMENT_SCAN_TOPIC, pageScanRequest), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
+            scheduler.schedule(() -> kafkaTemplate.send(KAFKA_PAGE_SCAN_TOPIC, pageScanRequest), (long) i * FETCH_RATE_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
 
         scheduler.shutdown();

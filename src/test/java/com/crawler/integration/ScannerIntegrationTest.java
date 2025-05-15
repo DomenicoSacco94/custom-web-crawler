@@ -61,7 +61,7 @@ public class ScannerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void testDocumentScanWithPattern() {
+    void testPageScanWithPattern() {
 
         // Wait for Kafka container to have completely set up the cluster
         Awaitility.await()

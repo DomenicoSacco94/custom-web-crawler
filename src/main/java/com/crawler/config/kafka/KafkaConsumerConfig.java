@@ -49,7 +49,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, PageScanRequest> documentScanRequestConsumerFactory() {
+    public ConsumerFactory<String, PageScanRequest> scanRequestConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -62,9 +62,9 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PageScanRequest> documentScanRequestKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, PageScanRequest> scanRequestKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, PageScanRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(documentScanRequestConsumerFactory());
+        factory.setConsumerFactory(scanRequestConsumerFactory());
         return factory;
     }
 }

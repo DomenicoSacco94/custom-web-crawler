@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Document Scanner API", version = "1.0.0", description = "API for scanning pdf documents"))
+@OpenAPIDefinition(info = @Info(title = "Scanner API", version = "1.0.0", description = "Custom Web Crawler API"))
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean

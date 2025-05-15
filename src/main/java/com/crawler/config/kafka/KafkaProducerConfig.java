@@ -22,7 +22,7 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, PageScanRequest> documentRequestProducerFactory() {
+    public ProducerFactory<String, PageScanRequest> scanRequestProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -40,8 +40,8 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, PageScanRequest> documentRequestKafkaTemplate() {
-        return new KafkaTemplate<>(documentRequestProducerFactory());
+    public KafkaTemplate<String, PageScanRequest> scanRequestKafkaTemplate() {
+        return new KafkaTemplate<>(scanRequestProducerFactory());
     }
 
 

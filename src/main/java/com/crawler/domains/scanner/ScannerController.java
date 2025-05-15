@@ -20,7 +20,7 @@ public class ScannerController {
     @Operation(summary = "Scan the content from multiple URLs")
     @PostMapping("/scan")
     public ResponseEntity<Void> scanUrls(@Valid @RequestBody BulkPageScanRequest request) {
-        scannerService.scanBulkDocuments(request);
+        scannerService.scanBulkPages(request);
         return ResponseEntity.ok().build();
     }
 }

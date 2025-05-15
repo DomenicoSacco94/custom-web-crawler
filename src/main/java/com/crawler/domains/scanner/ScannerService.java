@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ScannerService {
     List<OccurrenceDTO> onScanRequest(PageScanRequest request);
-    void scanBulkDocuments(BulkPageScanRequest request);
+    void scanBulkPages(BulkPageScanRequest request);
 }

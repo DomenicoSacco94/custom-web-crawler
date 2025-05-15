@@ -31,9 +31,9 @@ class ScannerControllerTest {
     }
 
     @Test
-    void testScanDocuments() {
+    void testScanPages() {
         BulkPageScanRequest request = new BulkPageScanRequest(List.of("http://example.com/document1.pdf", "http://example.com/document2.pdf"), 1L);
-        doNothing().when(scannerServiceImpl).scanBulkDocuments(any(BulkPageScanRequest.class));
+        doNothing().when(scannerServiceImpl).scanBulkPages(any(BulkPageScanRequest.class));
 
         ResponseEntity<Void> response = scannerController.scanUrls(request);
 

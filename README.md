@@ -1,12 +1,17 @@
 # CUSTOM WEB CRAWLER
-This repo contains a web crawler which scans the web pages starting from some seed URLs, looking for occurrences about a given Topic (expressed in a collection of regexps).
-Once some occurrences are found, some facts are extrapolated on them using Spring AI.
+
+This repo contains a Web Crawler which scans the web pages starting from some seed URLs, looking for occurrences about a given Topic (expressed in a collection of regexps).
+
+Once the corresponding occurrences are found, fact(s) for each occurrence are extrapolated using Spring AI.
+
+![Block Diagram](./docs/images/Block%20diagram.jpg)
 
 ## Purpose of the Repo
 I wanted to create a POC to check if LLMs could be leveraged to quickly browse through high-volume information sources (Social medias, news feeds, ...)
-and extrapolate only the facts about a certain topic. 
+and extrapolate only the relevant facts about a given topic. 
+
 In a time when LLMs will produce a humungous amount of noise on the web, 
-I wondered how effectively they could be used as their own antidote: extrapolate only the facts that are relevant at a given moment from huge amounts of text.
+I wondered how effectively they could be used as their own antidote: extrapolate only the relevant facts from huge amounts of text.
 
 ## Implementation choices
 
@@ -16,10 +21,10 @@ Through this POC I wanted to get acquainted with the following technologies:
 - [TestContainers](https://testcontainers.com/), used to create comprehensive (and complicated) integration tests.
 
 If you are interested in checking in more detail the decision process and design choices that I made during the implementation,
-please refer to the Architectural Decision Records located at `/docs/adr`.
+check out the Architectural Decision Records located at `/docs/adr`.
 
 ## How to run the application locally
-To spin up the Spring Boot App and the Postgres DB, please run the following command:
+To spin up the necessary Docker containers, run the following command:
 
 ```sh
 docker-compose up --build
@@ -73,7 +78,7 @@ The DB will then start getting filled with facts about the chosen industry secto
 There is also the strong tendency to the extrapolated facts being duplicated. 
 
 An improvement of this crawler could be to re-use the LLMs on the fact collection itself to compile a holistic report, without duplications.
-Different LLMs models can be also combined for different applications, for instance using a quicker (but less effective) AI to extrapolate the single facts and then a "smarter" (but slower one) to compile a report.
+Different LLMs models can be also combined for different applications, for instance using a quicker (but less effective) LLM to extrapolate the single facts and then a "smarter" (but slower) LLM to compile a report.
 
 ## Running tests locally
 The tests can be run using the Gradle wrapper:

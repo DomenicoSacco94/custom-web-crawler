@@ -31,9 +31,9 @@ http://localhost:8080/swagger-ui/index.html
 
 ## Example of usage
 
-Say you would like to scan the Google News feed for relevant facts about a given industry sector.
+Say you would like to scan a news feed website for relevant facts about a given industry sector.
 
-First, we need to create a Topic with some Regexp representing it:
+First, we need to create a **Topic** with some **Regexps** representing it:
 
 **POST /v1/topics**
 

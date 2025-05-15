@@ -42,7 +42,6 @@ public class PageCrawlerUtilsTest {
 
             Set<String> result = pageCrawlerUtils.extractLinksFromPage(url, analyzedLinks);
 
-            // Ensure both links are included
             Set<String> expectedLinks = Set.of("http://example.com/link1", "http://example.com/link2");
             assertEquals(expectedLinks, result);
         }

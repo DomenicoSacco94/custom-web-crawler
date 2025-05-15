@@ -53,21 +53,17 @@ public class FactServiceImpl implements FactService {
         String surroundingText = occurrenceDTO.getSurroundingText();
         String charLimit = String.valueOf(CHAR_WINDOW_LENGTH / SYNTHESIS_FIRST_FACTOR);
 
-        // Hydrate and call for inferredText
         String factPrompt = hydrateFactPrompt(factPromptTemplate, description, surroundingText, charLimit);
         String inferredTextResponse = ollamaChatModel.call(factPrompt);
 
-        // Hydrate and call for consequences
         String consequencesPrompt = hydrateFactPrompt(consequencesPromptTemplate, description, surroundingText, charLimit);
         String consequencesResponse = ollamaChatModel.call(consequencesPrompt);
 
-        // Populate FactDTO
         FactDTO factDTO = new FactDTO();
         factDTO.setOccurrenceDTO(occurrenceDTO);
         factDTO.setInferredText(inferredTextResponse);
         factDTO.setConsequences(consequencesResponse);
 
-        // Save to repository
         factRepository.save(factMapper.toEntity(factDTO));
     }
 

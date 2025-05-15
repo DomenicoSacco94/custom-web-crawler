@@ -13,14 +13,13 @@ I could also have built the project with the newest Java LTS such as 21, but I f
 ### PostgreSQL
 I decided to use PostgreSQL because I often worked with it previously. 
 PostgreSQL also has easily configurable indexes, which can help us optimize the query times.
-In this project, I assumed that readings of the regexps are much more frequent than writings, as every time that a web page will be parsed, all the regexps for a relevant topic are going to be fetched.
-In production contexts, it needs to be accounted that each index comes with additional space and writing time cost.
+In this project, I assumed that readings of the regexps are much more frequent than their writings, as every time that a web page will be parsed, all the regexps for a relevant topic are going to be fetched.
 I also created a "projection" model of the regexp table, in case it will start containing a growing number of columns,
 so that only the regexp fields that are strictly needed will be queried.
 
 ### Flyway
 In a production application, performing data migrations is a challenging endeavour.
-I used this migration tool in the past (and also Liquibase) to properly keep track of the DB history and to easily perform incremental changes to the DB structure once that the application already holds production data.
+I used this migration tool in the past (and also Liquibase) to properly keep track of the DB history and to easily perform incremental changes to the DB structure once the database already contains production data.
 
 ### Gradle
 In this project I chose Gradle over Maven for these main reasons:
@@ -34,18 +33,19 @@ defined in the `build.gradle`.
 
 ## Kafka
 The purpose of Kafka in this project is to enable and manage the asynchronous communication.
-The asynchronous communication takes place for 2 operations in particular:
+The asynchronous communication takes place for 2 operations:
 - Download of the web pages (I/O bounded)
 - Usage of the chosen Ollama modle through Spring AI (CPU bounded)
-Since in this project there are only 2 topics to be managed, I decided not to use Zookeeper and use Kafka in KRaft mode instead.
+Since in this project there are only 2 topics to be managed, I decided not to use Zookeeper and only use Kafka in KRaft mode instead.
 
 ## Design decisions
 
 ### Integration testing
-In this application I decided to use some SQL scripts, since I needed some test data stored in the DB for the integration test.
 For a demonstration purposes, I decided to create one single integration test.
 Creating an integration test that spins 3 containers at the same time (Kafka, PostgreSQL and Ollama) was challenging and I did it mostly for
 demonstrative purpose (and as a personal challenge). DO NOT TRY THIS AT HOME :-D
+Usually the integration tests should be as little as possible and test only "the happy path" of the application. 
+For the edge cases, their corresponding unit tests can be created.
 
 ## Validation
 In order to keep the application structure flexible and easily apply new validations in the future, 
@@ -56,6 +56,6 @@ Its current only application is checking that the Regexp are actually valid Rege
 During the development of this small project, I proceeded by the following iterations:
 1. Scan a pdf document or a web page manually uploaded
 2. Scan a single web page served by an external url
-3. Scan multiple URLs coming asynchronously
+3. Scan multiple URLs asynchronously
 
 I decided to keep only the last endpoint I implemented, because it makes the microservice much easier to maintain.

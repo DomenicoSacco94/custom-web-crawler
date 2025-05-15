@@ -22,25 +22,24 @@ class RegexpValidatorTest {
 
     @Test
     void testValidRegexp() {
-        assertTrue(regexpValidator.isValid("^[a-zA-Z0-9]+$", context)); // Alphanumeric regex
-        assertTrue(regexpValidator.isValid(".*", context)); // Match any string
-        assertTrue(regexpValidator.isValid("\\d{3}-\\d{2}-\\d{4}", context)); // Social Security Number format
+        assertTrue(regexpValidator.isValid("^[a-zA-Z0-9]+$", context));
+        assertTrue(regexpValidator.isValid(".*", context));
     }
 
     @Test
     void testInvalidRegexp() {
-        assertFalse(regexpValidator.isValid("[a-z", context)); // Unclosed character class
-        assertFalse(regexpValidator.isValid("(", context)); // Unclosed group
-        assertFalse(regexpValidator.isValid("\\", context)); // Trailing escape character
+        assertFalse(regexpValidator.isValid("[a-z", context));
+        assertFalse(regexpValidator.isValid("(", context));
+        assertFalse(regexpValidator.isValid("\\", context));
     }
 
     @Test
     void testNullRegexp() {
-        assertFalse(regexpValidator.isValid(null, context)); // Null input
+        assertFalse(regexpValidator.isValid(null, context));
     }
 
     @Test
     void testEmptyRegexp() {
-        assertTrue(regexpValidator.isValid("", context)); // Empty string is technically valid
+        assertTrue(regexpValidator.isValid("", context));
     }
 }

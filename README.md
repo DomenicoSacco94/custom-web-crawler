@@ -3,9 +3,9 @@ This repo contains a web crawler which scans the web pages starting from some se
 Once some occurrences are found, some facts are extrapolated on them using Spring AI.
 
 ## Purpose of the Repo
-Good question... I wanted to create a POC to check if LLMs could be leveraged to quickly browse through high-volume information sources (Social medias, news feeds, ...)
-and extrapolate only given important facts. 
-In a time when LLMs will produce a humungous amount of noise and duplicated information on the web, 
+I wanted to create a POC to check if LLMs could be leveraged to quickly browse through high-volume information sources (Social medias, news feeds, ...)
+and extrapolate only the facts about a certain topic. 
+In a time when LLMs will produce a humungous amount of noise on the web, 
 I wondered how effectively they could be used as their own antidote: extrapolate only the facts that are relevant at a given moment from huge amounts of text.
 
 ## Implementation choices
@@ -67,9 +67,9 @@ Then we can trigger the scan of the corresponding news Feed endpoint:
 }
 ```
 
-The DB will then start getting filled of facts about the chosen industry sector, which are accessible through the endpoint **GET /v1/facts**.
+The DB will then start getting filled with facts about the chosen industry sector, which are accessible through the endpoint **GET /v1/facts**.
 
-**DISCLAIMER**: Depending on the Ollama model used, the results might be false, irrelevant and/or hallucinated.
+**DISCLAIMER**: Depending on the quality of the Ollama model used, the results might be false, irrelevant and/or hallucinated.
 There is also the strong tendency to the extrapolated facts being duplicated. 
 
 An improvement of this crawler could be to re-use the LLMs on the fact collection itself to compile a holistic report, without duplications.

@@ -24,7 +24,7 @@ public class PageCrawlerUtils {
         // Extract links from meaningful sections
         Set<String> newLinks = new HashSet<>(extractLinks(document.select("main, article, section"), analyzedLinks));
 
-        // Fallback: Extract links from the entire document if needed
+        // Extract links from the entire document if not enough links are found
         if (newLinks.size() < MAX_LINKS_PER_DOCUMENT) {
             newLinks.addAll(extractLinks(document.select("a[href]"), analyzedLinks));
         }
@@ -39,7 +39,6 @@ public class PageCrawlerUtils {
         for (Element element : elements) {
             String link = element.attr("abs:href");
 
-            // Check if the link is already analyzed
             if (!analyzedLinks.contains(link) && !link.isEmpty()) {
                 links.add(link);
                 if (links.size() >= MAX_LINKS_PER_DOCUMENT) {

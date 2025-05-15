@@ -60,7 +60,6 @@ class FactServiceTest {
     @Test
     void testExtractFact() throws IOException {
 
-        // Create and populate OccurrenceDTO and RegexpDTO
         RegexpDTO regexpDTO = new RegexpDTO();
         regexpDTO.setDescription("Mocked description");
 
@@ -80,7 +79,6 @@ class FactServiceTest {
         String inferredTextResponse = "Inferred text";
         String consequencesResponse = "Consequences";
 
-        // Spy on the factService to mock specific methods
         FactServiceImpl spyFactService = spy(factService);
 
         doReturn(factPromptTemplate).when(spyFactService).loadFactPromptTemplate("prompts/prompt_extract_fact.txt");
@@ -112,11 +110,9 @@ class FactServiceTest {
 
     @Test
     void testLoadFactPromptTemplate() throws IOException {
-        // Mock the file content
         String expectedContent = "Mocked file content";
         String filePath = "prompts/prompt_extract_fact.txt";
 
-        // Use a spy to mock the behavior of loadFactPromptTemplate
         FactServiceImpl spyFactService = spy(factService);
         doReturn(expectedContent).when(spyFactService).loadFactPromptTemplate(filePath);
 

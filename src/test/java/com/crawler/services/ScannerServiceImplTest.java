@@ -76,7 +76,6 @@ public class ScannerServiceImplTest {
         String htmlText = "Sample HTML text";
         Long topicId = 1L;
 
-        // Use the correct Set containing the URL
         Set<String> expectedLinks = Set.of(htmlUrl);
 
         OccurrenceDTO occurrenceDTO = new OccurrenceDTO();
@@ -130,7 +129,6 @@ public class ScannerServiceImplTest {
         String url = "http://example.com/document.pdf";
         Long topicId = 1L;
 
-        // Simulate the URL being already scanned
         scannerServiceImpl.onScanRequest(new PageScanRequest(url, topicId, 0));
 
         PageScanRequest request = new PageScanRequest(url, topicId, 1);

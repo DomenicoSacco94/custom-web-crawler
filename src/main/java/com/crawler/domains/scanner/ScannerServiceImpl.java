@@ -67,7 +67,6 @@ public class ScannerServiceImpl implements ScannerService {
             savedOccurrences.forEach(occurrenceService::onOccurrence);
             scannedLinks.add(documentUrl);
 
-            //extract and send to download queue the links inside the page
             Set<String> newLinks = pageCrawlerUtils.extractLinksFromPage(documentUrl, scannedLinks);
 
             for (String newLink : newLinks) {
